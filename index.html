@@ -20,7 +20,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#11110fee;border-top:1px s
 nav div{max-width:680px;width:100%;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}nav button{background:none;border:0;color:#aaa292;padding:7px 2px;font-size:11px}nav button b{display:block;font-size:20px;color:#d5b873;margin-bottom:2px}
 #toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#d8bb75;color:#17130b;padding:9px 14px;border-radius:20px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:20}.log{font-size:12px;color:#a8a091;line-height:1.65;max-height:145px;overflow:auto}.passrow{display:grid;grid-template-columns:52px 1fr 1fr;gap:6px;align-items:center;margin:7px 0}.reward{background:#10100e;border:1px solid #393329;border-radius:8px;padding:7px;font-size:11px}.locked{opacity:.5}.accent{color:var(--gold)}.red{color:var(--red)}.green{color:var(--green)}
 </style></head>
-<body><main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.3</span></header><section id="view"></section></main>
+<body><main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.3.1</span></header><section id="view"></section></main>
 <div id="toast"></div>
 <nav><div>
 <button onclick="page='cultivate';render()"><b>☯</b>修行</button>
@@ -78,7 +78,7 @@ function cultivateHTML(){
 var special=s.root==="五靈根"&&s.tech==="殘缺五行訣"?'<div class="item"><b>隱藏道途：五行同修</b><br><small>五靈根修行緩慢，但五行俱全，似乎另有玄機。</small></div>':"";
 return '<div class="panel"><div class="title">洞府・閉關</div><div class="story">功法：'+s.tech+'<br>兵器：'+s.equip.weapon+'　護具：'+s.equip.armor+'<br><br>天地靈氣流轉。你能感覺到，道途仍在前方。</div>'+special+
 btn("閉關吐納","cultivate()")+btn("服用丹藥 / 突破","breakthrough()","good")+'</div>'+
-'<div class="panel"><div class="title">當前目標</div><span class="chip">下一境："+nextGoal()+'</span><span class="chip">擊殺妖獸 '+s.kills+'</span><span class="chip">因果 '+s.karma+'</span></div>';
+'<div class="panel"><div class="title">當前目標</div><span class="chip">下一境：'+nextGoal()+'</span><span class="chip">擊殺妖獸 '+s.kills+'</span><span class="chip">因果 '+s.karma+'</span></div>';
 }
 function nextGoal(){if(s.realm>=9)return "渡過天劫";return s.layer<4?realms[s.realm]+"下一階":realms[s.realm+1]}
 window.cultivate=function(){
