@@ -1,112 +1,155 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>凡途｜文字修仙 RPG</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b09">
+<title>凡途 Alpha｜文字修仙</title>
 <style>
-:root{--bg:#0d0d0c;--card:#171713;--gold:#d7b56d;--text:#eee7d8;--muted:#9d978c;--red:#a84f43}
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#272319,#0b0b0a 45%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Serif TC","PingFang TC",serif}
-#app{max-width:620px;margin:auto;min-height:100vh;padding:calc(18px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom))}
-h1{font-size:38px;letter-spacing:8px;margin:10px 0 2px;color:var(--gold)} .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
-.panel{background:rgba(23,23,19,.92);border:1px solid #51462f;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 10px 30px #0006}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#0f0f0d;border-radius:9px;padding:9px;text-align:center}.stat b{display:block;color:var(--gold);font-size:16px}.stat small{color:var(--muted)}
-.story{line-height:1.85;font-size:17px;white-space:pre-line;min-height:180px}.title{font-size:21px;color:var(--gold);margin-bottom:8px}
-button{width:100%;margin:6px 0;padding:14px;border-radius:10px;border:1px solid #75613b;background:#262116;color:var(--text);font-size:16px;text-align:left}
-button:active{transform:scale(.99);background:#3a301d}.danger{border-color:#6e3831}.tag{display:inline-block;border:1px solid #675b40;color:#d9c28e;border-radius:20px;padding:4px 9px;margin:3px;font-size:12px}
-#log{font-size:13px;color:#aaa395;max-height:120px;overflow:auto}.footer{text-align:center;color:#69655c;font-size:11px;margin-top:20px}
-</style>
-</head>
-<body><main id="app">
-<h1>凡途</h1><div class="sub">一介凡人，此生可問長生？</div>
-<div class="panel stats" id="stats"></div>
-<div class="panel"><div class="title" id="chapter"></div><div class="story" id="story"></div><div id="choices"></div></div>
-<div class="panel"><div class="title">仙史</div><div id="log"></div></div>
-<div class="footer">凡途 v0.1.2 · 存檔保存在此裝置</div>
-</main>
+:root{--bg:#0b0b09;--panel:#171612;--panel2:#211e16;--gold:#d9b96e;--text:#eee7d8;--muted:#9d9789;--line:#51472f;--green:#8eb28b;--red:#bd6a5c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#30291a,#0b0b09 38%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
+#app{max-width:680px;margin:auto;min-height:100vh;padding:calc(14px + env(safe-area-inset-top)) 13px calc(82px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:end;justify-content:space-between;margin:6px 4px 12px}h1{margin:0;color:var(--gold);letter-spacing:7px;font-size:34px}.ver{font-size:11px;color:#777166}
+.panel{background:rgba(23,22,18,.96);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;box-shadow:0 8px 28px #0006}.title{font-size:20px;color:var(--gold);margin-bottom:9px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{background:#0f0f0d;border-radius:9px;padding:8px;text-align:center}.stat small{display:block;color:var(--muted);font-size:11px}.stat b{display:block;color:var(--gold);font-size:15px;margin-top:2px}
+.bar{height:8px;background:#0b0b09;border-radius:9px;overflow:hidden;margin:7px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,#80652e,#d9b96e);width:0}
+.story{line-height:1.8;font-size:16px;white-space:pre-line}.btn{width:100%;padding:13px;margin:5px 0;border-radius:10px;border:1px solid #75623b;background:#282218;color:var(--text);font-size:15px;text-align:left}.btn:active{transform:scale(.99);background:#3b311f}.btn:disabled{opacity:.4}.danger{border-color:#6d3932}.good{border-color:#496849}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}.chip{display:inline-block;border:1px solid #675b40;border-radius:18px;padding:4px 8px;margin:2px;font-size:11px;color:#d7c18e}
+.item{background:#10100e;border:1px solid #383329;border-radius:9px;padding:10px;margin:6px 0}.item b{color:#dbc17f}.item small{color:var(--muted)}
+nav{position:fixed;bottom:0;left:0;right:0;background:#11110fee;border-top:1px solid #3d3729;padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:10}
+nav div{max-width:680px;width:100%;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}nav button{background:none;border:0;color:#aaa292;padding:7px 2px;font-size:11px}nav button b{display:block;font-size:20px;color:#d5b873;margin-bottom:2px}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#d8bb75;color:#17130b;padding:9px 14px;border-radius:20px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:20}.log{font-size:12px;color:#a8a091;line-height:1.65;max-height:145px;overflow:auto}.passrow{display:grid;grid-template-columns:52px 1fr 1fr;gap:6px;align-items:center;margin:7px 0}.reward{background:#10100e;border:1px solid #393329;border-radius:8px;padding:7px;font-size:11px}.locked{opacity:.5}.accent{color:var(--gold)}.red{color:var(--red)}.green{color:var(--green)}
+</style></head>
+<body><main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.3</span></header><section id="view"></section></main>
+<div id="toast"></div>
+<nav><div>
+<button onclick="page='cultivate';render()"><b>☯</b>修行</button>
+<button onclick="page='adventure';render()"><b>⚔</b>歷練</button>
+<button onclick="page='bag';render()"><b>囊</b>儲物</button>
+<button onclick="page='pass';render()"><b>令</b>仙令</button>
+<button onclick="page='history';render()"><b>卷</b>仙史</button>
+</div></nav>
 <script>
-(function () {
-  var defaultState = {age:16,realm:"凡人",lv:0,qi:0,hp:100,luck:0,karma:0,root:"未測",log:[]};
-  var s;
-  try {
-    s = JSON.parse(localStorage.getItem("fantu-save"));
-  } catch(e) { s = null; }
-  if (!s) s = defaultState;
-
-  function save() {
-    try { localStorage.setItem("fantu-save", JSON.stringify(s)); } catch(e) {}
-  }
-  function add(x) {
-    s.log.unshift("• " + x);
-    s.log = s.log.slice(0,20);
-  }
-  function stats() {
-    var a = [["境界",s.realm+(s.lv?" "+s.lv+"層":"")],["修為",s.qi],["靈根",s.root],["壽歲",s.age],["氣運",s.luck],["因果",s.karma]];
-    var out = "";
-    for (var i=0;i<a.length;i++) out += '<div class="stat"><small>'+a[i][0]+'</small><b>'+a[i][1]+'</b></div>';
-    document.getElementById("stats").innerHTML = out;
-    document.getElementById("log").innerHTML = s.log.length ? s.log.join("<br>") : "你的仙途尚未開始。";
-  }
-  var currentChoices = [];
-  function scene(title,text,choices) {
-    stats();
-    document.getElementById("chapter").innerHTML = title;
-    document.getElementById("story").innerHTML = text.replace(/\n/g,"<br>");
-    currentChoices = choices;
-    var out = "";
-    for (var i=0;i<choices.length;i++) out += '<button data-choice="'+i+'">'+choices[i].t+'</button>';
-    document.getElementById("choices").innerHTML = out;
-    var buttons = document.getElementById("choices").getElementsByTagName("button");
-    for (var j=0;j<buttons.length;j++) {
-      buttons[j].onclick = function(){ currentChoices[parseInt(this.getAttribute("data-choice"),10)].f(); };
-    }
-    save();
-  }
-  function cultivate() {
-    var need=s.lv*30;
-    scene("青玄宗・外門","山中無甲子，修行不知年。\n\n你盤坐洞府，引天地靈氣入體。\n\n目前修為："+s.qi+" / "+need+"\n\n煉氣期共九層。每一次突破，都讓你離凡人更遠一步。",[
-      {t:"閉關修煉",f:function(){var gain=12+Math.floor(Math.random()*16)+(s.root=="天靈根"?12:s.root=="異靈根"?7:0);s.qi+=gain;add("閉關修煉，修為 +"+gain+"。");if(s.qi>=need){s.qi-=need;s.lv++;add("突破！踏入煉氣"+s.lv+"層。");if(s.lv>=9){foundation();return;}}cultivate();}},
-      {t:"前往後山歷練",f:adventure},
-      {t:"重新開始此世",f:function(){if(confirm("確定重新轉世？")){localStorage.removeItem("fantu-save");location.reload();}}}
-    ]);
-  }
-  function testRoot() {
-    var r=Math.random()*100;
-    s.root=r<2?"天靈根":r<8?"異靈根":r<25?"雙靈根":r<60?"三靈根":"五靈根";
-    s.realm="煉氣";s.lv=1;s.qi=0;add("測靈結果："+s.root+"。");
-    scene("仙門・測靈","測靈石在你掌下亮起光芒。\n\n「"+s.root+"！」\n\n殿內眾人的目光全落在你的身上。\n\n從這一刻開始，你正式踏入修仙界。",[
-      {t:"拜入青玄宗，開始修煉",f:cultivate}
-    ]);
-  }
-  function oldman() {
-    scene("夜半仙緣","子時，老者悠悠轉醒。\n\n他看了你許久，忽然問道：「少年，你可曾想過……這世上真有長生之人？」",[
-      {t:"「我想修仙。」",f:function(){add("你第一次親口說出求仙之念。");testRoot();}},
-      {t:"「我只求此生無憾。」",f:function(){s.luck+=2;add("老者對你的回答頗感意外。");testRoot();}}
-    ]);
-  }
-  function adventure() {
-    var r=Math.random();
-    if(r<0.5){s.qi+=20;s.luck++;add("你在山澗發現靈草，修為 +20。");scene("後山・機緣","溪水旁生著一株泛著微光的靈草。",[{t:"返回宗門",f:cultivate}]);}
-    else{s.qi+=15;add("遭遇妖狼，苦戰後將其斬殺。");scene("後山・妖狼","灌木中猛然竄出一頭赤目妖狼！\n\n苦戰半刻，你終於將它斬殺。",[{t:"取走妖丹，返回宗門",f:cultivate}]);}
-  }
-  function foundation() {
-    s.realm="煉氣大圓滿";
-    scene("築基之前","九層靈氣匯聚丹田。\n\n你已站在凡俗與真正修士之間的第一道門檻。\n\n——《凡途 v0.1.2》第一章至此。",[
-      {t:"嘗試築基",f:function(){if(Math.random()<0.55){s.realm="築基";s.lv=1;add("築基成功！");scene("築基・道成","轟——\n\n天地靈氣如百川歸海。\n\n【築基成功】\n\n你的故事，才剛剛開始。",[{t:"查看仙史",f:foundation}]);}else{add("築基失敗，但保住道基。");s.realm="煉氣";s.lv=8;s.qi=0;cultivate();}}}
-    ]);
-  }
-  function start() {
-    scene("第一章・青雲村","大乾王朝，青州邊陲。\n\n你生於青雲村一戶尋常人家。十六年來，你從未見過真正的仙人。\n\n直到今日黃昏，一名渾身是血的白衣老者倒在你家門前。",[
-      {t:"扶老者進屋，替他包紮傷口",f:function(){s.karma+=2;s.luck++;add("你救下了一名來歷不明的老者。");oldman();}},
-      {t:"先拿走他的儲物袋，再救人",f:function(){s.karma-=2;s.luck++;add("你取走了老者的儲物袋。");oldman();}},
-      {t:"此事詭異，轉身離開",f:function(){add("三日後，你在山中遇見仙門使者。");testRoot();}}
-    ]);
-  }
-  try {
-    if(s.root=="未測") start();
-    else if(s.realm=="築基" || s.realm=="煉氣大圓滿") foundation();
-    else cultivate();
-  } catch(e) {
-    document.getElementById("story").innerHTML="遊戲載入發生錯誤：<br>"+String(e);
-  }
+(function(){
+var realms=["凡人","煉氣","築基","金丹","元嬰","化神","煉虛","合體","大乘","渡劫"];
+var defaultS={name:"無名",realm:0,layer:0,qi:0,stones:100,age:16,lifespan:80,root:"未測",luck:0,karma:0,hp:100,maxhp:100,atk:12,def:5,stage:"intro",inv:{靈草:0,妖丹:0,玄鐵:0,靈木:0,築基丹:0,悟道殘頁:0},equip:{weapon:"木劍",armor:"布衣"},tech:"吐納訣",passXP:0,passLv:1,monthly:false,lastClaim:"",history:[],kills:0};
+window.page="cultivate";
+function load(){try{return JSON.parse(localStorage.getItem("fantu-alpha"))||JSON.parse(localStorage.getItem("fantu-save"))||defaultS}catch(e){return defaultS}}
+window.s=load();
+for(var k in defaultS)if(typeof s[k]==="undefined")s[k]=defaultS[k];
+if(!s.inv)s.inv=defaultS.inv;
+for(var q in defaultS.inv)if(typeof s.inv[q]==="undefined")s.inv[q]=0;
+function save(){try{localStorage.setItem("fantu-alpha",JSON.stringify(s))}catch(e){}}
+function hist(x){s.history.unshift("【"+s.age+"歲】"+x);s.history=s.history.slice(0,80);save()}
+function toast(x){var t=document.getElementById("toast");t.innerHTML=x;t.style.opacity=1;setTimeout(function(){t.style.opacity=0},1600)}
+function need(){return s.realm===0?20:Math.round((s.realm*65+35)*(1+s.layer*.28))}
+function realmName(){if(s.realm===0)return "凡人";if(s.realm===9)return "渡劫期";return realms[s.realm]+(s.layer?["","初期","中期","後期","大圓滿"][s.layer]:"")}
+function top(){
+var pct=Math.min(100,Math.floor(s.qi/need()*100));
+return '<div class="panel stats">'+
+stat("境界",realmName())+stat("修為",s.qi+"/"+need())+stat("靈石",s.stones)+stat("靈根",s.root)+stat("壽元",s.age+"/"+s.lifespan)+stat("氣運",s.luck)+
+'</div><div class="bar"><i style="width:'+pct+'%"></i></div>';
+}
+function stat(a,b){return '<div class="stat"><small>'+a+'</small><b>'+b+'</b></div>'}
+function btn(t,fn,cl){return '<button class="btn '+(cl||"")+'" onclick="'+fn+'">'+t+'</button>'}
+window.render=function(){
+try{
+var v=document.getElementById("view");
+if(s.stage==="intro"){intro();return}
+if(page==="cultivate")v.innerHTML=top()+cultivateHTML();
+if(page==="adventure")v.innerHTML=top()+adventureHTML();
+if(page==="bag")v.innerHTML=top()+bagHTML();
+if(page==="pass")v.innerHTML=top()+passHTML();
+if(page==="history")v.innerHTML=top()+historyHTML();
+save();
+}catch(e){document.getElementById("view").innerHTML='<div class="panel"><b class="red">載入錯誤</b><br>'+String(e)+'</div>'}
+}
+function intro(){
+document.getElementById("view").innerHTML='<div class="panel"><div class="title">第一世・青雲村</div><div class="story">大乾王朝，青州邊陲。<br><br>你生於凡俗，十六年從未見過仙人。<br><br>直到黃昏，一名渾身是血的白衣老者倒在你家門前。腰間掛著一只青色儲物袋。</div>'+
+btn("救下老者","startLife(1)","good")+btn("取走儲物袋，再救人","startLife(-1)")+btn("不沾因果，轉身離去","startLife(0)")+'</div>';
+}
+window.startLife=function(choice){
+s.karma+=choice;var r=Math.random()*100;s.root=r<2?"天靈根":r<8?"異靈根":r<25?"雙靈根":r<60?"三靈根":"五靈根";
+s.realm=1;s.layer=1;s.lifespan=120;s.stage="game";hist("測出「"+s.root+"」，拜入青玄宗，踏入煉氣。");
+if(s.root==="五靈根"&&Math.random()<.75){s.tech="殘缺五行訣";hist("於藏經閣角落得到《殘缺五行訣》。")}
+render();toast("仙途已啟："+s.root);
+}
+function cultivateHTML(){
+var special=s.root==="五靈根"&&s.tech==="殘缺五行訣"?'<div class="item"><b>隱藏道途：五行同修</b><br><small>五靈根修行緩慢，但五行俱全，似乎另有玄機。</small></div>':"";
+return '<div class="panel"><div class="title">洞府・閉關</div><div class="story">功法：'+s.tech+'<br>兵器：'+s.equip.weapon+'　護具：'+s.equip.armor+'<br><br>天地靈氣流轉。你能感覺到，道途仍在前方。</div>'+special+
+btn("閉關吐納","cultivate()")+btn("服用丹藥 / 突破","breakthrough()","good")+'</div>'+
+'<div class="panel"><div class="title">當前目標</div><span class="chip">下一境："+nextGoal()+'</span><span class="chip">擊殺妖獸 '+s.kills+'</span><span class="chip">因果 '+s.karma+'</span></div>';
+}
+function nextGoal(){if(s.realm>=9)return "渡過天劫";return s.layer<4?realms[s.realm]+"下一階":realms[s.realm+1]}
+window.cultivate=function(){
+var base=10+Math.floor(Math.random()*12);var mult=s.root==="天靈根"?1.8:s.root==="異靈根"?1.5:s.root==="雙靈根"?1.3:s.root==="五靈根"?.8:1;
+var g=Math.floor(base*mult);s.qi+=g;s.passXP+=3;s.age+=Math.random()<.08?1:0;hist("閉關修行，修為增長 "+g+"。");checkPass();render();toast("修為 +"+g);
+}
+window.breakthrough=function(){
+if(s.qi<need()){toast("修為尚未圓滿");return}
+s.qi-=need();
+if(s.layer<4){s.layer++;hist("突破至 "+realmName()+"。");}
+else{
+if(s.realm===9){tribulation();return}
+var chance=.82;if(s.realm>=4)chance=.72;if(s.realm>=7)chance=.62;
+if(s.realm===1&&s.inv["築基丹"]>0){s.inv["築基丹"]--;chance+=.15}
+if(Math.random()<chance){s.realm++;s.layer=1;s.age+=Math.max(1,s.realm*2);s.lifespan+=50+s.realm*35;s.atk+=15*s.realm;s.def+=8*s.realm;hist("破境成功！踏入「"+realms[s.realm]+"」。");if(s.realm===2&&s.root==="五靈根"&&s.tech==="殘缺五行訣"){hist("五行相生，道基異變——凝成「五行道基」！");s.luck+=5}}
+else{hist("破境失敗，道基震盪。");s.qi=0;toast("突破失敗");render();return}
+}
+s.passXP+=15;checkPass();render();toast("突破成功！");
+}
+function adventureHTML(){
+return '<div class="panel"><div class="title">山河歷練</div><div class="story">修仙不是閉門苦修。秘境、妖獸、古修洞府與殺人奪寶，都可能成為你的機緣，也可能成為你的死劫。</div>'+
+btn("探索宗門後山","adventure(1)")+btn("進入危險秘境（收益較高）","adventure(2)")+btn("挑戰同境妖獸","fight()","danger")+'</div>';
+}
+window.adventure=function(risk){
+var r=Math.random();s.age+=Math.random()<.15*risk?1:0;s.passXP+=5*risk;
+if(r<.28){var n=1+Math.floor(Math.random()*3*risk);s.inv["靈草"]+=n;hist("歷練發現靈草 ×"+n+"。");toast("獲得 靈草 ×"+n)}
+else if(r<.52){var st=30+Math.floor(Math.random()*80*risk);s.stones+=st;hist("發現前人遺落儲物袋，靈石 +"+st+"。");toast("靈石 +"+st)}
+else if(r<.72){s.inv["玄鐵"]+=risk;s.inv["靈木"]+=1;hist("採得煉器材料。");toast("獲得煉器材料")}
+else if(r<.88){fight();return}
+else{s.inv["悟道殘頁"]++;s.luck++;hist("古洞中得到「悟道殘頁」！");toast("奇遇：悟道殘頁")}
+checkPass();render();
+}
+window.fight=function(){
+var power=s.atk+s.realm*12+Math.floor(Math.random()*30);var enemy=s.realm*20+s.layer*8+Math.floor(Math.random()*35);
+if(power>=enemy){s.kills++;s.inv["妖丹"]++;s.qi+=12+s.realm*5;s.passXP+=8;hist("斬殺一頭同境妖獸，取得妖丹。");toast("斬妖成功：妖丹 ×1")}
+else{s.hp-=15;if(s.hp<=0){death();return}else{hist("與妖獸交戰負傷而歸。");toast("負傷！生命 -15")}}
+checkPass();render();
+}
+function bagHTML(){
+var out="";for(var k in s.inv)out+='<div class="item"><b>'+k+'</b> × '+s.inv[k]+'<br><small>'+desc(k)+'</small></div>';
+return '<div class="panel"><div class="title">儲物袋</div>'+out+'</div><div class="panel"><div class="title">煉製</div>'+
+btn("5靈草＋2妖丹 → 築基丹","craftPill()")+btn("3玄鐵＋2靈木 → 玄鐵劍","craftSword()")+'</div>';
+}
+function desc(k){var d={靈草:"煉丹常用材料",妖丹:"妖獸精華，可用於煉丹煉器",玄鐵:"堅硬的煉器材料",靈木:"蘊含靈氣的木材",築基丹:"突破築基時提高成功率",悟道殘頁:"古修留下的殘缺感悟"};return d[k]||"修仙材料"}
+window.craftPill=function(){if(s.inv["靈草"]>=5&&s.inv["妖丹"]>=2){s.inv["靈草"]-=5;s.inv["妖丹"]-=2;s.inv["築基丹"]++;hist("煉成一枚築基丹。");render();toast("築基丹 ×1")}else toast("材料不足")}
+window.craftSword=function(){if(s.inv["玄鐵"]>=3&&s.inv["靈木"]>=2){s.inv["玄鐵"]-=3;s.inv["靈木"]-=2;s.equip.weapon="玄鐵劍";s.atk+=15;hist("親手煉成玄鐵劍。");render();toast("玄鐵劍煉製成功")}else toast("材料不足")}
+function passHTML(){
+var lv=Math.min(100,1+Math.floor(s.passXP/20));s.passLv=lv;var rows="";
+var levels=[1,5,10,20,30,50,70,100];
+for(var i=0;i<levels.length;i++){var L=levels[i];rows+='<div class="passrow"><b>Lv.'+L+'</b><div class="reward '+(lv<L?"locked":"")+'">免費<br>靈石／材料</div><div class="reward '+(lv<L?"locked":"")+'"><span class="accent">問道仙令</span><br>'+passReward(L)+'</div></div>'}
+return '<div class="panel"><div class="title">仙途紀・青玄問道</div><div class="story">仙令等級 <b class="accent">'+lv+'/100</b><br>道行 '+s.passXP+'<br><br><span class="chip">免費仙途</span><span class="chip">問道仙令 NT$690（規劃）</span></div><div class="bar"><i style="width:'+Math.min(100,(s.passXP%20)/20*100)+'%"></i></div>'+rows+
+'<div class="item"><b>設計原則</b><br><small>付費仙令只提供更多靈石、煉丹／煉器／秘境材料與收藏外觀，不直接出售神兵、頂級功法或境界。</small></div></div>'+
+'<div class="panel"><div class="title">仙緣月契</div><div class="story">規劃售價：NT$150／30日<br>每日登入領取靈石＋境界對應材料。</div>'+btn("Alpha：模擬領取今日月卡","monthlyClaim()")+'</div>';
+}
+function passReward(L){if(L===100)return "太古玄鐵＋限定稱號";if(L>=50)return "稀有煉器材料包";if(L>=20)return "秘境素材＋靈石";return "靈草／玄鐵／靈石"}
+window.monthlyClaim=function(){var d=new Date().toISOString().slice(0,10);if(s.lastClaim===d){toast("今日已領取");return}s.lastClaim=d;s.stones+=300;s.inv["靈草"]+=3;s.inv["玄鐵"]+=1;hist("領取仙緣月契：靈石300、靈草3、玄鐵1。");render();toast("月契每日獎勵已領取")}
+function checkPass(){s.passLv=Math.min(100,1+Math.floor(s.passXP/20))}
+function historyHTML(){
+return '<div class="panel"><div class="title">此世仙史</div><div class="story">「人之一世，所求為何？」<br><br>出身：青雲村<br>靈根：'+s.root+'<br>功法：'+s.tech+'<br>斬妖：'+s.kills+'<br>當前：'+realmName()+'</div></div><div class="panel"><div class="title">生平</div><div class="log">'+(s.history.length?s.history.join("<br>"):"尚無記載")+'</div></div>'+
+'<div class="panel">'+btn("刪除此世・重新輪迴","resetLife()","danger")+'</div>';
+}
+function tribulation(){
+var chance=.45+s.luck*.01;
+if(Math.random()<chance){hist("九九天劫散去，你渡劫成功！此界已無你的路。");s.stage="ascended";document.getElementById("view").innerHTML=top()+'<div class="panel"><div class="title">第一部・人界篇 完</div><div class="story">九天雷海逐漸消散。<br><br>你抬頭望去，天穹裂開一道從未見過的門。<br><br><b class="accent">【此界已無你的路。】</b><br><br>—— 飛升 ——</div></div>';save()}
+else{hist("渡劫失敗，身死道消。");death()}
+}
+function death(){
+hist("身死道消。此世，道止「"+realmName()+"」。");s.stage="dead";save();
+document.getElementById("view").innerHTML=top()+'<div class="panel"><div class="title">此世已盡</div><div class="story">你的一生化作仙史中的數行文字。<br><br>境界：'+realmName()+'<br>享年：'+s.age+'歲<br><br>大道未盡，或可再世重修。</div>'+btn("輪迴轉世","resetLife()","good")+'</div>';
+}
+window.resetLife=function(){if(!confirm("結束此世並重新開始？"))return;var old=s.history.slice(0,6);localStorage.removeItem("fantu-alpha");s=JSON.parse(JSON.stringify(defaultS));s.history=["【輪迴】前世殘夢："+(old[0]||"無")];page="cultivate";render()}
+render();
 })();
 </script></body></html>
