@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b0c">
+<title>凡途 Alpha 0.4.1｜青玄宗篇</title>
+<style>
+:root{--bg:#090b0c;--panel:#151612eF;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2}
+*{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
+#scene{position:fixed;inset:0;background-size:cover;background-position:center;transition:opacity .28s,filter .3s;z-index:-2}
+#shade{position:fixed;inset:0;background:linear-gradient(#0003,#070908a8 48%,#070807 90%);z-index:-1}
+#app{max-width:720px;margin:auto;min-height:100vh;padding:calc(12px + env(safe-area-inset-top)) 12px calc(88px + env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:end;padding:3px 3px 8px}h1{margin:0;color:var(--gold);letter-spacing:7px;font-size:31px}.ver{font-size:10px;color:#aaa}
+.panel{background:var(--panel);backdrop-filter:blur(9px);border:1px solid var(--line);border-radius:14px;padding:13px;margin:9px 0;box-shadow:0 10px 30px #0007}.title{color:var(--gold);font-size:19px;margin-bottom:8px}.subtitle{font-size:12px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.stat{background:#0c0d0cbd;border-radius:9px;padding:7px;text-align:center}.stat small{display:block;color:var(--muted);font-size:10px}.stat b{font-size:14px;color:#e6cb8b}
+.bar{height:8px;background:#080908;border-radius:8px;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,#765c29,#e1c276)}
+.hp i{background:linear-gradient(90deg,#78352f,#c97869)}.mp i{background:linear-gradient(90deg,#31516d,#87aac5)}
+.story{line-height:1.75;white-space:pre-line;font-size:15px}.btn{width:100%;padding:12px;margin:4px 0;border:1px solid #75633e;border-radius:10px;background:#252117eF;color:var(--text);font-size:14px;text-align:left}.btn:active{transform:scale(.99);background:#3a301e}.btn.good{border-color:#49684c}.btn.danger{border-color:#743d36}.btn.blue{border-color:#425e72}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.chip{display:inline-block;border:1px solid #645a42;border-radius:18px;padding:4px 8px;margin:2px;font-size:11px;color:#dbc68f}.item{background:#0d0e0ce8;border:1px solid #38342a;border-radius:9px;padding:9px;margin:6px 0}.item b{color:#e1c47e}.item small{color:var(--muted)}.rarity2{color:#9fc28d!important}.rarity3{color:#8db4dc!important}.rarity4{color:#c59ce2!important}
+nav{position:fixed;bottom:0;left:0;right:0;background:#0e0f0eee;border-top:1px solid #40392a;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:20}nav div{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(6,1fr)}nav button{border:0;background:none;color:#aaa292;padding:6px 0;font-size:10px}nav b{display:block;color:#d8bb75;font-size:18px;margin-bottom:2px}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#dec27c;color:#151108;padding:9px 14px;border-radius:20px;opacity:0;transition:.2s;z-index:30;font-size:12px;white-space:nowrap}
+.overlay{position:fixed;inset:0;background:#050605f2;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}.card{max-width:620px;width:100%;background:#171713;border:1px solid #66583a;border-radius:16px;padding:18px}.enemy{font-size:22px;color:#d78b78}.skill{display:grid;grid-template-columns:1fr 1fr;gap:6px}.log{font-size:12px;line-height:1.6;color:#b9b1a1;max-height:130px;overflow:auto}.location{font-size:24px;color:#ead49b}.weather{font-size:11px;color:#b7b0a2}
+</style>
+</head><body>
+<div id="scene"></div><div id="shade"></div>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.4.1・青玄宗篇</span></header><section id="view"></section></main>
+<div id="toast"></div><div id="modal"></div>
+<nav><div>
+<button onclick="goPage('world')"><b>山</b>世界</button><button onclick="goPage('cultivate')"><b>☯</b>修行</button>
+<button onclick="goPage('bag')"><b>囊</b>儲物</button><button onclick="goPage('craft')"><b>鼎</b>百藝</button>
+<button onclick="goPage('pass')"><b>令</b>仙令</button><button onclick="goPage('history')"><b>卷</b>仙史</button>
+</div></nav>
+<script>
+(function(){
+var R=["凡人","煉氣","築基","金丹","元嬰","化神","煉虛","合體","大乘","渡劫"];
+var scenes={
+ village:{name:"青雲村",desc:"炊煙沿著青石屋瓦升起。這裡是你凡俗人生開始的地方。",bg:"radial-gradient(circle at 50% 20%,#775f3a,#25241d 45%,#0b0d0d)"},
+ gate:{name:"青玄宗・山門",desc:"千級石階沒入雲海，青玄二字刻在百丈山壁之上。",bg:"radial-gradient(circle at 50% 10%,#66808a,#263b3d 40%,#0b0d0d)"},
+ outer:{name:"青玄宗・外門",desc:"晨鐘迴盪。數百外門弟子在山腰洞府間來往。",bg:"radial-gradient(circle at 40% 10%,#526c58,#26372c 42%,#0b0d0d)"},
+ library:{name:"藏經閣",desc:"木樓古舊，玉簡如星。功法從來不是免費的。",bg:"radial-gradient(circle at 50% 15%,#765d36,#30291e 45%,#0b0d0d)"},
+ dan:{name:"丹峰",desc:"藥香與丹火終年不散，偶爾也傳來炸爐巨響。",bg:"radial-gradient(circle at 50% 15%,#70422c,#33221c 45%,#0b0d0d)"},
+ forge:{name:"器峰",desc:"火星自山腹飛散，錘擊聲日夜不絕。",bg:"radial-gradient(circle at 50% 15%,#7c3928,#38231c 45%,#0b0d0d)"},
+ market:{name:"青玄坊市",desc:"散修、商隊與宗門弟子在此交換靈石、丹藥與消息。",bg:"radial-gradient(circle at 50% 15%,#79633d,#342f25 45%,#0b0d0d)"},
+ mountain:{name:"宗門後山",desc:"越過警戒石碑後，林間開始出現妖獸足跡。",bg:"radial-gradient(circle at 50% 10%,#36523c,#1d3025 45%,#090b0b)"},
+ secret:{name:"霧隱秘境",desc:"空氣裡漂著銀白霧氣。每一步，都可能是機緣或死劫。",bg:"radial-gradient(circle at 50% 15%,#556d72,#27363a 45%,#090b0b)"}
+};
+var D={realm:0,layer:0,qi:0,stones:120,age:16,lifespan:80,root:"未測",luck:0,karma:0,hp:100,maxhp:100,mp:60,maxmp:60,atk:12,def:5,stage:"intro",loc:"village",tech:"凡俗吐納",contrib:0,passXP:0,lastClaim:"",kills:0,
+inv:{靈草:0,妖丹:0,玄鐵:0,靈木:0,赤炎晶:0,築基丹:0,回春丹:1,悟道殘頁:0},equip:{weapon:{name:"木劍",atk:2,rarity:1},armor:{name:"粗布衣",def:1,rarity:1},artifact:null},recipes:{築基丹:false,回春丹:true,玄鐵劍:true},history:[],relations:{林師姐:0,韓執事:0},flags:{elder:false,five:false,inner:false},offline:0,lastSeen:Date.now()};
+window.page="world";
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function load(){try{var x=JSON.parse(localStorage.getItem("fantu04"));return x||clone(D)}catch(e){return clone(D)}}
+window.s=load(); merge(s,D);
+function merge(a,b){for(var k in b){if(typeof a[k]==="undefined"){a[k]=clone(b[k]);continue}if(b[k]!==null&&typeof b[k]==="object"&&!Array.isArray(b[k])){if(a[k]===null||typeof a[k]!=="object")a[k]=clone(b[k]);else merge(a[k],b[k])}}}
+function save(){s.lastSeen=Date.now();localStorage.setItem("fantu04",JSON.stringify(s))}
+function toast(x){var e=document.getElementById("toast");e.textContent=x;e.style.opacity=1;setTimeout(function(){e.style.opacity=0},1500)}
+function hist(x){s.history.unshift("【"+s.age+"歲】"+x);s.history=s.history.slice(0,120)}
+function need(){return Math.round((s.realm*90+60)*(1+s.layer*.35))}
+function rn(){if(!s.realm)return "凡人";return R[s.realm]+(["","初期","中期","後期","大圓滿"][s.layer]||"")}
+function stat(a,b){return '<div class="stat"><small>'+a+'</small><b>'+b+'</b></div>'}
+function top(){return '<div class="panel stats">'+stat("境界",rn())+stat("修為",s.qi+"/"+need())+stat("靈石",s.stones)+stat("靈根",s.root)+stat("宗門貢獻",s.contrib)+stat("壽元",s.age+"/"+s.lifespan)+'</div>'}
+function B(t,f,c){return '<button class="btn '+(c||"")+'" onclick="'+f+'">'+t+'</button>'}
+window.goPage=function(p){page=p;render()}
+function setScene(){var sc=scenes[s.loc]||scenes.village;document.getElementById("scene").style.background=sc.bg}
+window.render=function(){
+try{setScene();var v=document.getElementById("view");if(s.stage==="intro"){intro();return}
+var h=top();if(page==="world")v.innerHTML=h+world();if(page==="cultivate")v.innerHTML=h+cultivate();
+if(page==="bag")v.innerHTML=h+bag();if(page==="craft")v.innerHTML=h+craft();if(page==="pass")v.innerHTML=h+pass();
+if(page==="history")v.innerHTML=h+history();save()}catch(e){document.getElementById("view").innerHTML='<div class="panel"><b>程式錯誤</b><br>'+e.message+'</div>'}}
+function intro(){document.getElementById("view").innerHTML='<div class="panel"><div class="title">第一世・青雲村</div><div class="story">大乾王朝，青州邊陲。\n\n十六年來，你只在說書人口中聽過仙人。\n\n直到一場暴雨夜，一名白衣老者倒在你家門前。他胸口染血，腰間卻掛著一只青色儲物袋。\n\n遠處，似乎還有人正在追來。</div>'+B("先救人，再問來歷","start(1)","good")+B("取走儲物袋，再將人藏起","start(-1)")+B("關門。不沾這場因果","start(0)")+'</div>'}
+window.start=function(c){s.karma=c;s.flags.elder=c!==0;var r=Math.random()*100;s.root=r<3?"天靈根":r<10?"異靈根":r<28?"雙靈根":r<62?"三靈根":"五靈根";s.realm=1;s.layer=1;s.lifespan=125;s.loc="gate";s.stage="game";s.tech="青玄吐納訣";hist("測靈大典，測出「"+s.root+"」，踏入煉氣。");if(s.root==="五靈根"){s.flags.five=true;hist("靈根駁雜，被執事評為下等資質。")}if(c===1){s.luck+=2;hist("白衣老者臨別贈你一枚無字玉牌。")}render()}
+function world(){
+var sc=scenes[s.loc], acts="";
+if(s.loc==="gate")acts=B("進入外門","move('outer')")+B("前往青玄坊市","move('market')");
+if(s.loc==="outer")acts=B("返回山門","move('gate')")+B("前往藏經閣","move('library')")+B("前往丹峰","move('dan')")+B("前往器峰","move('forge')")+B("前往後山歷練","move('mountain')","danger")+B("拜訪任務堂","mission()");
+if(s.loc==="library")acts=B("翻閱基礎功法","library()")+B("返回外門","move('outer')");
+if(s.loc==="dan")acts=B("進入煉丹房","goPage('craft')")+B("向丹師請教","danEvent()")+B("返回外門","move('outer')");
+if(s.loc==="forge")acts=B("進入煉器室","goPage('craft')")+B("返回外門","move('outer')");
+if(s.loc==="market")acts=B("逛攤位","market()")+B("返回山門","move('gate')");
+if(s.loc==="mountain")acts=B("搜尋靈藥","explore(1)")+B("深入妖獸領地","explore(2)","danger")+B("尋找霧隱秘境入口","secretTry()","blue")+B("返回外門","move('outer')");
+if(s.loc==="secret")acts=B("探索秘境","explore(3)","danger")+B("離開秘境","move('mountain')");
+return '<div class="panel"><div class="location">'+sc.name+'</div><div class="weather">☁ 靈氣濃度：'+(s.loc==="secret"?"濃郁":"尋常")+'</div><div class="story">'+sc.desc+'</div></div><div class="panel"><div class="title">可前往／行動</div>'+acts+'</div>'+randomNotice()}
+function randomNotice(){var a=["兩名弟子正在議論三日後的外門小比。","任務堂張貼了新的妖獸懸賞。","坊市傳聞有人出售殘缺古丹方。","昨夜後山似乎出現了陌生劍光。"];return '<div class="panel"><div class="subtitle">宗門見聞</div><div class="story">'+a[Math.floor(Math.random()*a.length)]+'</div></div>'}
+window.move=function(x){document.getElementById("scene").style.opacity=.15;setTimeout(function(){s.loc=x;document.getElementById("scene").style.opacity=1;render()},220)}
+window.mission=function(){var r=Math.random();if(r<.5){s.contrib+=8;s.stones+=30;hist("完成外門雜務，獲得貢獻8、靈石30。");toast("任務完成")}else{hist("韓執事交給你一張後山妖獸懸賞。");s.relations["韓執事"]++;toast("獲得妖獸懸賞")};render()}
+window.library=function(){if(s.contrib<10){toast("需要宗門貢獻 10");return}s.contrib-=10;if(s.flags.five&&s.tech!=="殘缺五行訣"){s.tech="殘缺五行訣";s.luck+=2;hist("在藏經閣角落發現《殘缺五行訣》。「五行俱全，方可自成天地。」");toast("獲得隱藏功法！")}else{s.tech="青玄引氣篇";hist("換取《青玄引氣篇》。");toast("習得新功法")};render()}
+window.danEvent=function(){if(!s.recipes.築基丹&&s.contrib>=15){s.contrib-=15;s.recipes.築基丹=true;hist("丹峰執事傳授築基丹方。");toast("習得：築基丹")}else toast("丹師：先去替宗門做些事吧。")}
+window.market=function(){if(s.stones>=60){s.stones-=60;s.inv.靈草+=4;s.inv.靈木+=1;hist("坊市購入一包低階材料。");toast("購入材料包")}else toast("靈石不足")}
+function cultivate(){
+var bonus=s.tech==="殘缺五行訣"?0.9:s.tech==="青玄引氣篇"?1.25:1;
+return '<div class="panel"><div class="title">洞府修行</div><div class="story">功法：<b>'+s.tech+'</b>\n生命 '+s.hp+'/'+s.maxhp+'　靈力 '+s.mp+'/'+s.maxmp+'\n\n閉關會推進歲月。境界越高，突破越艱難。</div><div class="bar hp"><i style="width:'+(s.hp/s.maxhp*100)+'%"></i></div><div class="bar mp"><i style="width:'+(s.mp/s.maxmp*100)+'%"></i></div>'+B("閉關一月","meditate()")+B("嘗試突破","breakthrough()","good")+B("服用回春丹","heal()")+'</div>'+
+(s.flags.five?'<div class="panel"><div class="title">道途異象</div><div class="story">五行靈氣彼此牽制，修行遠比常人艱難。但《殘缺五行訣》似乎在等待築基之日。</div></div>':"")}
+window.meditate=function(){var m=s.root==="天靈根"?1.7:s.root==="異靈根"?1.45:s.root==="雙靈根"?1.25:s.root==="五靈根"?.78:1;var p=s.tech==="青玄引氣篇"?1.25:s.tech==="殘缺五行訣"?1.05:1;var g=Math.floor((18+Math.random()*15)*m*p);s.qi+=g;s.passXP+=4;s.age+=Math.random()<.18?1:0;s.mp=s.maxmp;hist("閉關吐納，修為 +"+g+"。");render();toast("修為 +"+g)}
+window.breakthrough=function(){if(s.qi<need()){toast("修為尚未圓滿");return}var ch=.9-s.realm*.035;if(s.realm===1&&s.layer===4&&s.inv.築基丹>0){s.inv.築基丹--;ch+=.12}if(Math.random()>ch){s.qi=Math.floor(s.qi*.35);s.hp=Math.max(20,s.hp-25);hist("突破失敗，經脈受創。");render();toast("突破失敗");return}s.qi-=need();if(s.layer<4)s.layer++;else if(s.realm<9){s.realm++;s.layer=1;s.maxhp+=35;s.hp=s.maxhp;s.maxmp+=20;s.mp=s.maxmp;s.lifespan+=55+s.realm*25;s.atk+=10*s.realm;s.def+=6*s.realm;if(s.realm===2&&s.flags.five&&s.tech==="殘缺五行訣"){hist("五氣匯海，凝成「五行道基」！");s.luck+=6}}else{hist("你開始準備九九天劫。")}s.passXP+=20;hist("破境成功，踏入 "+rn()+"。");render();toast("破境成功！")}
+window.heal=function(){if(s.inv.回春丹<1){toast("沒有回春丹");return}s.inv.回春丹--;s.hp=Math.min(s.maxhp,s.hp+50);render();toast("傷勢恢復")}
+window.explore=function(risk){var r=Math.random();s.passXP+=5*risk;if(r<.25){s.inv.靈草+=risk+1;hist("採得靈草。");toast("靈草 +"+(risk+1))}else if(r<.45){s.inv.玄鐵+=risk;s.inv.靈木++;toast("取得煉器材料")}else if(r<.58&&risk>=2){s.inv.赤炎晶++;hist("在裂谷中發現赤炎晶。");toast("稀有材料：赤炎晶")}else battle(risk);render()}
+window.secretTry=function(){if(s.kills>=2||s.luck>=2){s.loc="secret";hist("穿過一層銀霧，進入霧隱秘境。");render()}else toast("你在山中轉了許久，一無所獲")}
+function battle(risk){
+var names=["青牙狼","赤尾妖狐","鐵背猿","噬靈蟒"];var e={name:names[Math.floor(Math.random()*names.length)],hp:65+risk*45+s.realm*18,maxhp:65+risk*45+s.realm*18,atk:9+risk*7+s.realm*5,def:3+risk*3};
+window.enemy=e;window.combatLog=[];showBattle()}
+function showBattle(){var e=enemy;document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="enemy">'+e.name+'</div><div class="bar hp"><i style="width:'+(e.hp/e.maxhp*100)+'%"></i></div><div class="subtitle">敵 HP '+Math.max(0,e.hp)+'/'+e.maxhp+'</div><hr style="border-color:#39342a"><b>'+rn()+'</b><div class="bar hp"><i style="width:'+(s.hp/s.maxhp*100)+'%"></i></div><div class="bar mp"><i style="width:'+(s.mp/s.maxmp*100)+'%"></i></div><div class="skill">'+B("普通攻擊","turn('attack')")+B("御氣斬・20靈力","turn('skill')","blue")+B("服回春丹","turn('pill')","good")+B("逃離戰鬥","turn('run')","danger")+'</div><div class="log">'+combatLog.slice(-6).join("<br>")+'</div></div></div>'}
+window.turn=function(a){var e=enemy;if(a==="run"){if(Math.random()<.65){combatLog.push("你成功脫離戰鬥。");closeBattle();return}else combatLog.push("逃跑失敗！")}
+if(a==="pill"){if(s.inv.回春丹>0){s.inv.回春丹--;s.hp=Math.min(s.maxhp,s.hp+45);combatLog.push("你服下回春丹。")}else combatLog.push("丹藥不足。")}
+if(a==="attack"){var d=Math.max(1,s.atk+(s.equip.weapon.atk||0)+Math.floor(Math.random()*10)-e.def);e.hp-=d;combatLog.push("你造成 "+d+" 傷害。")}
+if(a==="skill"){if(s.mp>=20){s.mp-=20;var d=Math.max(2,Math.floor((s.atk+(s.equip.weapon.atk||0))*1.7)+Math.floor(Math.random()*15)-e.def);e.hp-=d;combatLog.push("御氣斬！造成 "+d+" 傷害。")}else combatLog.push("靈力不足。")}
+if(e.hp<=0){s.kills++;s.inv.妖丹++;s.stones+=20+Math.floor(Math.random()*40);s.qi+=15+s.realm*5;s.passXP+=10;hist("斬殺 "+e.name+"，取得妖丹。");toast("戰鬥勝利");closeBattle();return}
+var ed=Math.max(1,e.atk+Math.floor(Math.random()*8)-s.def-(s.equip.armor.def||0));s.hp-=ed;combatLog.push(e.name+" 反擊，造成 "+ed+" 傷害。");if(s.hp<=0){s.hp=1;hist("遭 "+e.name+" 重創，僥倖被巡山弟子救回。");s.loc="outer";toast("重傷敗退");closeBattle();return}showBattle()}
+function closeBattle(){document.getElementById("modal").innerHTML="";save();render()}
+function bag(){var inv="";for(var k in s.inv)inv+='<div class="item"><b>'+k+'</b> × '+s.inv[k]+'</div>';return '<div class="panel"><div class="title">裝備</div>'+equip("武器",s.equip.weapon)+equip("護甲",s.equip.armor)+(s.equip.artifact?equip("法寶",s.equip.artifact):'<div class="item">法寶：尚未獲得</div>')+'</div><div class="panel"><div class="title">儲物袋</div>'+inv+'</div>'}
+function equip(slot,x){return '<div class="item"><b class="rarity'+(x.rarity||1)+'">'+slot+'・'+x.name+'</b><br><small>攻擊 +'+(x.atk||0)+'　防禦 +'+(x.def||0)+'</small></div>'}
+function craft(){return '<div class="panel"><div class="title">煉丹</div><div class="story">丹藥有成丹率與品質。高品質材料會在之後版本影響丹藥品階。</div>'+B("回春丹｜靈草×3","makePill('heal')")+B("築基丹｜靈草×6 妖丹×2 赤炎晶×1","makePill('foundation')")+'</div><div class="panel"><div class="title">煉器</div><div class="story">成品裝備會出現隨機品質與詞條。</div>'+B("鍛造玄鐵劍｜玄鐵×4 靈木×2","forge()")+'</div>'}
+window.makePill=function(t){if(t==="heal"){if(s.inv.靈草<3){toast("材料不足");return}s.inv.靈草-=3;if(Math.random()<.85){s.inv.回春丹++;toast("成丹：回春丹")}else toast("炸爐了……")}else{if(!s.recipes.築基丹){toast("尚未習得築基丹方");return}if(s.inv.靈草<6||s.inv.妖丹<2||s.inv.赤炎晶<1){toast("材料不足");return}s.inv.靈草-=6;s.inv.妖丹-=2;s.inv.赤炎晶--;if(Math.random()<.68){s.inv.築基丹++;toast("成丹：築基丹")}else toast("煉製失敗")};render()}
+window.forge=function(){if(s.inv.玄鐵<4||s.inv.靈木<2){toast("材料不足");return}s.inv.玄鐵-=4;s.inv.靈木-=2;var roll=Math.random(),rar=roll<.08?4:roll<.28?3:roll<.65?2:1;var names=["粗製玄鐵劍","精良玄鐵劍","青紋玄鐵劍","紫霄玄鐵劍"];var atk=[10,15,22,32][rar-1];if(Math.random()<.25)atk+=5;s.equip.weapon={name:names[rar-1],atk:atk,rarity:rar};hist("器峰開爐，鍛成 "+s.equip.weapon.name+"。");render();toast("鍛造成功！")}
+function pass(){var lv=Math.min(100,1+Math.floor(s.passXP/30));return '<div class="panel"><div class="title">問道仙令・第一季</div><div class="story">等級 <b>'+lv+'/100</b>　道行 '+s.passXP+'\n\n免費軌與 NT$690 進階軌都只提供材料、靈石與收藏內容。神兵、頂級功法與境界無法直接購買。</div><div class="bar"><i style="width:'+((s.passXP%30)/30*100)+'%"></i></div><div class="item"><b>Lv.20</b> 免費：靈草包　｜　仙令：秘境材料箱</div><div class="item"><b>Lv.50</b> 免費：玄鐵　｜　仙令：稀有煉器材料</div><div class="item"><b>Lv.100</b> 免費：稱號　｜　仙令：太古玄鐵＋限定洞府外觀</div></div><div class="panel"><div class="title">仙緣月契・NT$150</div><div class="story">每日登入：靈石＋境界對應材料。Alpha 目前只模擬領取。</div>'+B("領取今日月契","monthly()")+'</div>'}
+window.monthly=function(){var d=new Date().toISOString().slice(0,10);if(s.lastClaim===d){toast("今日已領");return}s.lastClaim=d;s.stones+=300;s.inv.靈草+=3;s.inv.玄鐵++;toast("月契：靈石300＋材料");render()}
+function history(){return '<div class="panel"><div class="title">此世仙史</div><div class="story">靈根：'+s.root+'\n境界：'+rn()+'\n功法：'+s.tech+'\n斬妖：'+s.kills+'\n因果：'+s.karma+'\n林師姐：'+s.relations.林師姐+'　韓執事：'+s.relations.韓執事+'</div></div><div class="panel"><div class="title">生平紀錄</div><div class="log">'+(s.history.join("<br>")||"尚無記載")+'</div></div>'}
+function offline(){var now=Date.now(),mins=Math.floor((now-(s.lastSeen||now))/60000);if(mins>=10&&s.stage==="game"){var cap=Math.min(mins,480),g=Math.floor(cap/10)*(3+s.realm);if(g>0){s.qi+=g;s.offline=g;setTimeout(function(){toast("離線修行：修為 +"+g)},600)}}}
+offline();render();
+})();
+</script></body></html>
