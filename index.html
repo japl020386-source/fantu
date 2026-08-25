@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>凡途｜文字修仙 RPG</title>
+<style>
+:root{--bg:#0d0d0c;--card:#171713;--gold:#d7b56d;--text:#eee7d8;--muted:#9d978c;--red:#a84f43}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#272319,#0b0b0a 45%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Serif TC","PingFang TC",serif}
+#app{max-width:620px;margin:auto;min-height:100vh;padding:calc(18px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom))}
+h1{font-size:38px;letter-spacing:8px;margin:10px 0 2px;color:var(--gold)} .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+.panel{background:rgba(23,23,19,.92);border:1px solid #51462f;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 10px 30px #0006}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#0f0f0d;border-radius:9px;padding:9px;text-align:center}.stat b{display:block;color:var(--gold);font-size:16px}.stat small{color:var(--muted)}
+.story{line-height:1.85;font-size:17px;white-space:pre-line;min-height:180px}.title{font-size:21px;color:var(--gold);margin-bottom:8px}
+button{width:100%;margin:6px 0;padding:14px;border-radius:10px;border:1px solid #75613b;background:#262116;color:var(--text);font-size:16px;text-align:left}
+button:active{transform:scale(.99);background:#3a301d}.danger{border-color:#6e3831}.tag{display:inline-block;border:1px solid #675b40;color:#d9c28e;border-radius:20px;padding:4px 9px;margin:3px;font-size:12px}
+#log{font-size:13px;color:#aaa395;max-height:120px;overflow:auto}.footer{text-align:center;color:#69655c;font-size:11px;margin-top:20px}
+</style>
+</head>
+<body><main id="app">
+<h1>凡途</h1><div class="sub">一介凡人，此生可問長生？</div>
+<div class="panel stats" id="stats"></div>
+<div class="panel"><div class="title" id="chapter"></div><div class="story" id="story"></div><div id="choices"></div></div>
+<div class="panel"><div class="title">仙史</div><div id="log"></div></div>
+<div class="footer">凡途 v0.1 · 存檔保存在此裝置</div>
+</main>
+<script>
+let s=JSON.parse(localStorage.getItem("fantu-save")||"null")||{age:16,realm:"凡人",lv:0,qi:0,hp:100,luck:0,karma:0,root:"未測",stage:0,log:[]};
+const save=()=>localStorage.setItem("fantu-save",JSON.stringify(s));
+function add(x){s.log.unshift("• "+x);s.log=s.log.slice(0,20)}
+function stats(){document.querySelector("#stats").innerHTML=[["境界",s.realm+(s.lv?" "+s.lv+"層":"")],["修為",s.qi],["靈根",s.root],["壽歲",s.age],["氣運",s.luck],["因果",s.karma]].map(x=>`<div class=stat><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");document.querySelector("#log").innerHTML=s.log.join("<br>")||"你的仙途尚未開始。"}
+function scene(title,text,choices){stats();chapter.textContent=title;story.textContent=text;document.querySelector("#choices").innerHTML=choices.map((c,i)=>`<button class="${c.danger?"danger":""}" onclick="act(${i})">${c.t}</button>`).join("");window.cs=choices;save()}
+function act(i){window.cs[i].f()}
+function start(){scene("第一章・青雲村","大乾王朝，青州邊陲。\n\n你生於青雲村一戶尋常人家。十六年來，你從未見過真正的仙人。\n\n直到今日黃昏，一名渾身是血的白衣老者倒在你家門前。\n\n他的腰間，掛著一只你從未見過的青色小袋。",[
+{t:"扶老者進屋，替他包紮傷口",f(){s.karma+=2;s.luck++;add("你救下了一名來歷不明的老者。");oldman()}},
+{t:"先拿走青色小袋，再救人",f(){s.karma-=2;s.luck++;add("你悄悄取走了老者的儲物袋。");oldman(true)}},
+{t:"此事詭異，立刻離開",f(){add("你選擇避開未知的因果。");road()}}
+])}
+function oldman(stole=false){scene("夜半仙緣",`子時，老者悠悠轉醒。\n\n他看了你許久，忽然問道：「少年，你可曾想過……這世上真有長生之人？」\n\n${stole?"他的目光似有若無地掃過你藏起來的青色小袋。":""}`,[
+{t:"「我想修仙。」",f(){add("你第一次親口說出求仙之念。");test()}},
+{t:"「長生有何好？我只求此生無憾。」",f(){s.luck+=2;add("老者對你的回答頗感意外。");test()}}
+])}
+function road(){scene("山中異象","三日後，你上山採藥。暴雨忽至，一道青雷劈開山壁，露出一座從未有人發現的古洞。\n\n洞中石桌上，只放著一枚黯淡玉簡。",[
+{t:"進入古洞，拿起玉簡",f(){s.luck+=3;add("雷雨之夜，你得到一枚神秘玉簡。");test()}},
+{t:"不貪機緣，轉身回村",f(){s.karma++;add("你避開古洞，卻在歸途中遇見仙門使者。");test()}}
+])}
+function test(){let r=Math.random()*100,root=r<2?"天靈根":r<8?"異靈根":r<25?"雙靈根":r<60?"三靈根":"五靈根";s.root=root;s.realm="煉氣";s.lv=1;s.qi=0;add("測靈結果："+root+"。");scene("仙門・測靈",`測靈石在你掌下亮起光芒。\n\n「${root}！」\n\n殿內眾人的目光一時間全落在你的身上。\n\n從這一刻開始，你正式踏入修仙界。\n\n【境界：煉氣一層】`,[{t:"拜入青玄宗，開始修煉",f(){cultivate()}}])}
+function cultivate(){let need=s.lv*30;scene("青玄宗・外門",`山中無甲子，修行不知年。\n\n你盤坐洞府，引天地靈氣入體。\n\n目前修為：${s.qi} / ${need}\n\n煉氣期共九層。每一次突破，都讓你離凡人更遠一步。`,[
+{t:"閉關修煉",f(){let gain=12+Math.floor(Math.random()*16)+(s.root=="天靈根"?12:s.root=="異靈根"?7:0);s.qi+=gain;add("閉關修煉，修為 +"+gain+"。");if(s.qi>=need){s.qi-=need;s.lv++;s.age+=Math.random()<.25?1:0;add("突破！踏入煉氣"+s.lv+"層。");if(s.lv>=9)return foundation()}cultivate()}},
+{t:"前往後山歷練",f(){adventure()}},
+{t:"重新開始此世",danger:true,f(){if(confirm("確定刪除存檔，重新轉世？")){localStorage.removeItem("fantu-save");location.reload()}}}
+])}
+function adventure(){let r=Math.random();if(r<.35){s.qi+=20;s.luck++;add("你在山澗發現一株靈草，修為 +20。");scene("後山・機緣","溪水旁生著一株泛著微光的靈草。你服下後，一股暖流直入丹田。",[{t:"返回宗門",f(){cultivate()}}])}else if(r<.7){s.hp-=10;add("遭遇妖狼，負傷後將其斬殺。");scene("後山・妖狼","灌木中猛然竄出一頭赤目妖狼！\n\n你以新學的御氣術苦戰半刻，終於將它斬殺。\n\n你受了些傷，但第一次真正明白修仙界並不只有長生。",[{t:"取走妖丹，返回宗門",f(){s.qi+=15;cultivate()}}])}else{s.luck+=2;add("偶遇神秘劍修，獲得一縷劍意。");scene("後山・陌生劍修","懸崖之上，一名青衣劍修只出了一劍。\n\n雲海被一分為二。\n\n他沒有回頭，只留下一句：「大道三千，選你自己的路。」",[{t:"記住這一劍",f(){s.qi+=25;cultivate()}}])}}
+function foundation(){s.realm="煉氣大圓滿";scene("築基之前","九層靈氣匯聚丹田。\n\n你已站在凡俗與真正修士之間的第一道門檻。\n\n宗門長老告訴你：築基若成，壽元大增；若敗，輕則修為倒退，重則道基盡毀。\n\n——《凡途 v0.1》第一章至此。\n\n你的故事，才剛剛開始。",[
+{t:"嘗試築基（預覽）",f(){let ok=Math.random()<.55;if(ok){s.realm="築基";s.lv=1;add("築基成功！真正踏上仙途。");scene("築基・道成","轟——\n\n丹田氣海驟然擴張，天地靈氣如百川歸海。\n\n【築基成功】\n\n你推開洞府石門。今日的山河，已與昨日不同。",[{t:"等待下一章",f(){foundation()}}])}else{add("築基失敗，但保住道基。");scene("築基・失敗","靈氣潰散，你猛地吐出一口鮮血。\n\n你活了下來。\n\n仙路漫長，一次失敗還不足以讓你停步。",[{t:"重整道心，再次修煉",f(){s.realm="煉氣";s.lv=8;s.qi=0;cultivate()}}])}},
+{t:"重新轉世",danger:true,f(){localStorage.removeItem("fantu-save");location.reload()}}
+])}
+if(s.stage===0 && s.root==="未測")start();else if(s.realm==="築基")foundation();else cultivate();
+</script></body></html>
