@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0c">
-<title>凡途 Alpha 0.7.1｜藏經與拍賣</title>
+<title>凡途 Alpha 0.7.2｜對話深化</title>
 <style>
 :root{--bg:#090b0c;--panel:#151612ef;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2;--purple:#c59ce2}
 *{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
@@ -40,7 +40,7 @@ window.addEventListener("error",function(e){
 </script>
 </head><body>
 <div id="scene"></div><div id="shade"></div>
-<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.7.1・藏經與拍賣</span></header><section id="view"></section></main>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.7.2・對話深化</span></header><section id="view"></section></main>
 <div id="toast"></div><div id="modal"></div>
 <nav><div>
 <button data-action="goPage('world')"><b>山</b>世界</button><button data-action="goPage('people')"><b>人</b>人物</button><button data-action="goPage('cultivate')"><b>☯</b>修行</button>
@@ -314,7 +314,71 @@ xue:["雪無痕睜眼，睫毛上的霜一點點化去。\n\n「你腳步太重�
 ghost:["殘魂道人望著斷裂的山門。\n\n「我們當年也覺得護宗大陣永遠不會破。」","他的手穿過石碑。\n\n「活人總想問傳承。死人只想知道，還有沒有人記得。」","殘魂道人低聲道：「覆滅我們的不是一個敵人，是三次明知不對卻沒人敢反對的選擇。」"]
 };
 
+
+var NPC_BRANCHES={
+qiao:[
+ ["問紅色玉簡到底是什麼任務","喬遠山盯了你兩息，最後還是把抽屜推回去。\n\n「鎮魔關外的失聯巡隊。」\n\n他用指節敲了敲桌面。\n\n「獎勵夠買一件上品法器，也夠讓你死得很有排場。等你築基再問。」","qiao_red"],
+ ["問最近哪件任務最古怪","他翻出一枚灰白玉簡。\n\n「萬獸林南側，連續七天有人聽見嬰兒哭。」\n\n「查過了，附近沒有村子，也沒有凡人。」\n\n喬遠山抬眼：「所以我還沒把它掛出去。」","qiao_cry"]
+],
+mu:[
+ ["問昨夜發光的藥田","木小禾的笑意一下淡了。\n\n「我本來以為是月光。」\n\n她蹲下，用手指在泥上畫出一個葉片形狀。\n\n「但那片田的靈草，葉脈全在往同一個方向長。像是在躲什麼東西。」","mu_glow"],
+ ["幫她照料半日靈田","你以為只是澆水，結果從除蟲、鬆土一路忙到日落。\n\n木小禾遞給你一瓢涼水。\n\n「現在知道為什麼丹峰的人只會催材料，不自己種了吧？」\n\n她笑得很得意。","mu_work"]
+],
+yu:[
+ ["問湖底那片青鱗是什麼","余晚舟把魚線纏回指尖。\n\n「二十年前也撈上來過一次。」\n\n他看著湖心。\n\n「第二天，湖面凍了三日。那年是盛夏。」\n\n說完，他不再解釋。","yu_scale"],
+ ["陪他安靜坐一會","你們誰也沒有說話。\n\n半個時辰後，余晚舟忽然道：「很多人坐下來，是為了等機緣。」\n\n他笑了笑。\n\n「你若能坐到忘了機緣，才算真的坐過。」","yu_sit"]
+],
+mo:[
+ ["問那柄會自鳴的古劍","莫掌櫃把門邊的禁制關上。\n\n「劍是真的，故事未必。」\n\n「賣家說從古宗葬地挖出來。可我看過劍上的土，不是青州的土。」\n\n他摸了摸下巴：「這就有意思了。」","mo_sword"],
+ ["問如何判斷裝備值不值得買","他拿出一枚外表華麗的戒指，又拿出一枚灰撲撲的鐵環。\n\n「前者能讓你在坊市被多看兩眼。」\n\n他敲了敲後者。\n\n「後者能在你快死時替你擋一下。」\n\n「你說哪個值錢？」","mo_value"]
+],
+ning:[
+ ["買一條關於古宗葬地的消息","寧紅袖伸手。\n\n「先欠著。」\n\n你愣住。\n\n她笑道：「靈石太便宜。等我哪天需要你替我跑一趟，你再決定這條消息值不值。」\n\n她在紙上寫下：『月末，西北碑林，禁制弱三息。』","ning_grave"],
+ ["問她最近誰在查自己","她沒有立刻回答，而是先看向窗外。\n\n「一個穿灰袍的人，問過你的出身，也問過你是不是五靈根。」\n\n「他沒留下名字。」\n\n寧紅袖把茶杯轉了半圈：「但他付錢很大方。」","ning_watch"]
+],
+sha:[
+ ["問夜裡的鈴聲是什麼","沙行客的手停在腰間。\n\n「我只聽過一次。」\n\n他沉聲道：「那夜同行六人，只有我沒回答。」\n\n「天亮後，另外五個人的腳印都往沙漠深處走，沒有回頭。」","sha_bell"],
+ ["請他教你在赤砂荒漠辨方向","他抓起一把沙，讓沙從指縫慢慢漏下。\n\n「別看太陽。看沙脊。」\n\n「風會騙你一次，沙丘會記住它騙過你的方向。」\n\n你花了一炷香，才勉強看出差別。","sha_way"]
+],
+hai:[
+ ["問第二個月亮是什麼","海七臉上的笑第一次消失。\n\n「不是月亮。」\n\n你等了很久，他也只肯多說一句：\n\n「看見它的人若睜眼太久，回港後會開始夢見一片自己沒去過的海。」","hai_moon"],
+ ["問海外最強的宗門","他嗤笑一聲。\n\n「每個港口的酒館都有自己的天下第一。」\n\n「真要說，海外有三宗七島，誰最強我不知道。」\n\n海七拍了拍船舷：「但最有錢的是萬潮宮，這我敢保證。」","hai_sects"]
+],
+lei:[
+ ["請他演示真正的雷法","雷千岳抬手指天。\n\n你還沒反應過來，一道雷已落在十丈外的石柱上。\n\n石柱沒有炸，只從中央多出一道筆直黑線。\n\n「雷法不是聲音大。」\n\n他看著你：「是你想躲時，已經來不及。」","lei_show"],
+ ["問他第一次引雷時怕不怕","雷千岳笑得比雷還響。\n\n「怕得尿褲子。」\n\n見你不信，他反而更樂。\n\n「所以現在那些說自己天生不怕雷的弟子，我一個都不信。」","lei_first"]
+],
+xue:[
+ ["問洞底那個『會呼吸的東西』","雪無痕沉默很久。\n\n「我不知道。」\n\n她很少直接說不知道。\n\n「每隔九日，洞底冰層會起伏一次。不是地脈，也不像妖獸。」\n\n「我還沒決定要不要把它叫醒。」","xue_breath"],
+ ["請她教你看雪花的六條紋","她讓一片雪停在你掌心上方。\n\n「第一條是靈氣，第二條是溫度，第三條是風。」\n\n說到第四條，她停了。\n\n「後面三條，你現在看不見。硬看只會頭痛。」","xue_snow"]
+],
+ghost:[
+ ["問古宗覆滅的三個錯誤選擇","殘魂道人久久不語。\n\n「第一，明知敵人會來，仍為了顏面不肯撤。」\n\n「第二，明知陣眼有問題，沒人敢質疑掌門。」\n\n說到第三個，他的身影劇烈波動。\n\n「第三……是我做的。」","ghost_three"],
+ ["問他還在等誰","殘魂道人望向斷門外。\n\n「一個弟子。」\n\n「我讓他帶著宗門最後一卷道統逃走。」\n\n他笑得很淡：「算算時間，他若成功，現在也該死了幾百年。」","ghost_wait"]
+]
+};
+
 var STORY_CHOICE={
+qiao_red:{reply:"喬遠山把那枚紅色玉簡鎖回抽屜。\n\n「記住，獎勵越像在勸你別怕，通常越值得怕。」",rel:1},
+qiao_cry:{reply:"他把灰白玉簡遞給你看了一眼便收回。\n\n玉簡最後一行只有四個字：『聲自地下。』",flag:"forest_cry",rel:1},
+mu_glow:{reply:"木小禾帶你走到那片藥田。白日看來一切正常，只有最靠北的一株靈草，葉尖微微朝南彎。\n\n你記住了這個細節。",flag:"field_glow",rel:1},
+mu_work:{reply:"日落後，木小禾塞給你兩株品相普通的靈草。\n\n「工錢。別嫌少，我自己一天也只捨得拿三株。」",item:"靈草",count:2,rel:1},
+yu_scale:{reply:"余晚舟把那片青鱗從袖中取出一角。\n\n只是一瞬，你竟感到一股不屬於煉氣妖獸的威壓。\n\n他立刻收起：「現在知道我為什麼不讓你下水了。」",luck:1,flag:"lake_scale"},
+yu_sit:{reply:"風從湖面吹來。你第一次沒有急著把這半個時辰換算成能增加多少修為。\n\n離開時，心境反而比閉關後更清明。",qi:10,rel:1},
+mo_sword:{reply:"莫掌櫃在紙上寫下一個你沒見過的商會印記。\n\n「若以後在海外見到這個標記，別急著亮出青玄宗身份。」",flag:"foreign_sword",rel:1},
+mo_value:{reply:"他把灰鐵環推給你試握。\n\n「你開始會問『適不適合』，而不是只問『強不強』。這比多一件上品法器值錢。」",rel:1},
+ning_grave:{reply:"你把那行字記下後，紙條自行燃成灰。\n\n寧紅袖道：「記在腦子裡。若被搜魂，那就自求多福。」",flag:"grave_window",rel:1},
+ning_watch:{reply:"她補了一句：「灰袍人左手少一根小指。」\n\n這個細節，也許哪天會救你一命。",flag:"gray_robed",rel:1},
+sha_bell:{reply:"沙行客最後只說：「若真聽見鈴聲，堵住耳朵沒用。別回答，別回頭，別數有幾聲。」",flag:"desert_bell",rel:1},
+sha_way:{reply:"你終於能從沙脊細微的陰影看出昨夜風向。\n\n沙行客點頭：「至少現在迷路時，你會死得慢一點。」",luck:1,rel:1},
+hai_moon:{reply:"海七把話題硬生生斷掉。\n\n「這件事別在船上問第二次。」\n\n他越不肯說，你越確定那不是水手用來嚇新人的故事。",flag:"second_moon",rel:1},
+hai_sects:{reply:"你第一次聽到海外『三宗七島』的說法。\n\n青州之外，顯然還有比你想像大得多的修仙世界。",flag:"oversea_sects",rel:1},
+lei_show:{reply:"那道黑線過了三息才轟然裂開。\n\n你這才明白，他所謂『快』甚至不是速度，而是結果先到了，聲音才追上。",qi:15,rel:1},
+lei_first:{reply:"雷千岳拍著你肩膀：「怕不丟人。怕了還裝不怕，才容易死。」\n\n這句話比他的雷法更容易記。",rel:2},
+xue_breath:{reply:"雪無痕把一枚冰符交給你。\n\n「若哪天我三日沒出洞，拿這個去找雷千岳。別自己下去。」",flag:"ice_breath",rel:1},
+xue_snow:{reply:"你盯得太久，太陽穴果然開始抽痛。\n\n雪無痕收走雪花：「知道看不懂就停，也是修行。」",qi:8,rel:1},
+ghost_three:{reply:"殘魂道人閉上眼。\n\n「第三個錯誤，我現在還不能告訴你。」\n\n「不是不信你，是怕你知道後，連這片葬地都走不出去。」",flag:"third_mistake",rel:1},
+ghost_wait:{reply:"他望著山門外很久。\n\n「如果你有一天在別處看見一枚裂成兩半的黑玉宗令，帶回來給我。」",flag:"black_token",rel:1},
 lin_route:{reply:"你追問那名失蹤弟子的名字。\n\n林清霜卻搖頭。\n\n「先別知道。名字會讓你好奇，好奇會讓你去找。」\n\n她看著你：「等你至少能在我手上撐十招，我再告訴你。」",rel:1},
 lin_sword:{reply:"她讓你重新起手七次。第七次，劍鞘沒有再敲下來。\n\n「勉強。」\n\n對林清霜而言，這兩個字大概已經算誇獎。",qi:12,rel:1},
 han_danger:{reply:"韓執事把灰色玉簡塞進你手裡，又立刻按住。\n\n「最後問一次。接了，就別指望我因為你年輕替你改難度。」\n\n你點頭後，他才鬆手。",contrib:3,flag:"beast_migration"},
@@ -335,10 +399,18 @@ inner_path:{reply:"顧長青看向遠處。\n\n「別把別人的後悔當成你
 inner_debt:{reply:"「所以收人東西前想清楚。」\n\n顧長青拍了拍你肩膀。\n\n「免費的丹藥、免費的指點、免費的人情，最後都有人來結帳。」",rel:1}
 };
 
-function npcName(id){var map={lin:"林清霜",han:"韓執事",old:"守閣老人",dan:"丹辰子",tie:"鐵山",merchant:"蘇九娘",zhao:"趙無鋒",sword:"白衣劍客",inner:"顧長青",qiao:"喬遠山",mu:"木小禾",yu:"余晚舟",mo:"莫掌櫃",ning:"寧紅袖",sha:"沙行客",hai:"海七",lei:"雷千岳",xue:"雪無痕",ghost:"殘魂道人"};return map[id]||"陌生修士";}
+function npcName(id){
+ for(var loc in NPCS){var arr=NPCS[loc]||[];for(var i=0;i<arr.length;i++)if(arr[i].id===id)return arr[i].name}
+ return "無名修士";
+}
 function nextNpcText(id){if(!s.talkCount)s.talkCount={};var arr=NOVEL_DIALOGUE[id]?NOVEL_DIALOGUE[id].lines:(NPC_SHORT[id]||["對方只是朝你點了點頭。"]);var n=s.talkCount[id]||0;s.talkCount[id]=n+1;return arr[n%arr.length];}
 function maybeFate(id){if(!NOVEL_DIALOGUE[id]||!NOVEL_DIALOGUE[id].fate)return "";if(!s.fateSeen)s.fateSeen={};if(s.fateSeen[id])return "";var n=s.talkCount[id]||0,rel=s.relations[id]||0;if(n<3||rel<1)return "";var chance=Math.min(.55,.18+rel*.08+s.luck*.015);if(Math.random()>chance)return "";s.fateSeen[id]=true;if(id==="lin"||id==="zhao"||id==="sword"||id==="inner")s.qi+=20;if(id==="dan")s.inv.回春丹=(s.inv.回春丹||0)+1;if(id==="tie")s.inv.洗鍊石=(s.inv.洗鍊石||0)+1;if(id==="merchant")s.stones+=66;if(id==="han")s.flags.secret=true;hist("【人物機緣】"+NOVEL_DIALOGUE[id].fate.replace(/\n/g," "));return "\n\n──── 人物機緣 ────\n"+NOVEL_DIALOGUE[id].fate;}
-function storyOptions(id){var d=NOVEL_DIALOGUE[id],out="";if(d){for(var i=0;i<d.choices.length;i++){var c=d.choices[i];out+=B(c[0],"storyChoice('"+id+"','"+c[2]+"')");}}else{out+=B("再聽他說說","talk('"+id+"')");}return out;}
+function storyOptions(id){
+ var out="",choices=NOVEL_DIALOGUE[id]?NOVEL_DIALOGUE[id].choices:(NPC_BRANCHES[id]||[]);
+ for(var i=0;i<choices.length;i++){var c=choices[i];out+=B(c[0],"storyChoice('"+id+"','"+c[2]+"')")}
+ if(!choices.length)out+=B("再聊一會","talk('"+id+"')");
+ return out;
+}
 
 function people(){var arr=NPCS[s.loc]||[],out="";if(!arr.length)out='<div class="story">此地暫無重要人物。四處走走，也許會遇見新的因果。</div>';for(var i=0;i<arr.length;i++){var n=arr[i];out+='<div class="item"><b>'+n.name+'</b> <span class="tag">'+n.title+'</span><br><small>'+n.desc+'</small><br><small>好感：'+(s.relations[n.id]||0)+'</small>'+B("交談","talk(\''+n.id+'\')")+'</div>'}return '<div class="panel"><div class="title">附近人物</div>'+out+'</div>'}
 window.talk=function(id){var name=npcName(id);var body=nextNpcText(id);s.relations[id]=(s.relations[id]||0)+1;body+=maybeFate(id);save();document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+name+'</div><div class="story">'+body+'</div>'+storyOptions(id)+B("先告辭","closeModal()")+'</div></div>';};
