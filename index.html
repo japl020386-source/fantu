@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0c">
-<title>凡途 Alpha 0.7｜人間有情</title>
+<title>凡途 Alpha 0.7.1｜藏經與拍賣</title>
 <style>
 :root{--bg:#090b0c;--panel:#151612ef;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2;--purple:#c59ce2}
 *{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
@@ -40,7 +40,7 @@ window.addEventListener("error",function(e){
 </script>
 </head><body>
 <div id="scene"></div><div id="shade"></div>
-<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.7・人間有情</span></header><section id="view"></section></main>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.7.1・藏經與拍賣</span></header><section id="view"></section></main>
 <div id="toast"></div><div id="modal"></div>
 <nav><div>
 <button data-action="goPage('world')"><b>山</b>世界</button><button data-action="goPage('people')"><b>人</b>人物</button><button data-action="goPage('cultivate')"><b>☯</b>修行</button>
@@ -76,7 +76,8 @@ frostCave:{name:"玄冰洞",desc:"洞中寒氣刺骨，冰壁深處偶有藍光�
 spiritMine:{name:"靈石礦脈",desc:"青玄宗重要資源地。礦坑越深，靈氣越重，也越容易出現地底妖獸。",bg:"radial-gradient(circle at 50% 12%,#625a48,#302a22 46%,#090908)",to:["frostCave","blackMarsh"]},
 blackMarsh:{name:"黑水澤",desc:"黑霧貼著水面流動，毒蟲、陰草與水妖共生。",bg:"radial-gradient(circle at 50% 12%,#364c42,#18271f 48%,#070908)",to:["spiritMine","moonCliff","ancientCity"]},
 moonCliff:{name:"望月崖",desc:"崖下萬丈雲海，月圓之夜常有劍修來此悟道。",bg:"radial-gradient(circle at 50% 10%,#5d6680,#293041 48%,#08090c)",to:["blackMarsh","swordValley"]},
-ancientCity:{name:"天河古城",desc:"一座由散修與商會共同維持的古城，丹鋪、拍賣行、客棧與情報組織林立。",bg:"radial-gradient(circle at 50% 12%,#7b6044,#382d23 45%,#0b0a09)",to:["blackMarsh","redDesert","seaPort"]},
+ancientCity:{name:"天河古城",desc:"一座由散修與商會共同維持的古城，丹鋪、拍賣行、客棧與情報組織林立。",bg:"radial-gradient(circle at 50% 12%,#7b6044,#382d23 45%,#0b0a09)",to:["blackMarsh","redDesert","seaPort","auctionHouse"]},
+auctionHouse:{name:"天河拍賣行",desc:"三層玉樓燈火通明。寄賣、鑑價與競拍都在此進行。拍賣行不問來路，只問手續費。",bg:"radial-gradient(circle at 50% 12%,#836448,#3b2d22 45%,#0b0908)",to:["ancientCity"]},
 redDesert:{name:"赤砂荒漠",desc:"白日灼熱，夜晚刺寒。流沙下埋著不知多少古戰場遺物。",bg:"radial-gradient(circle at 50% 12%,#a0643e,#4a2d20 46%,#100908)",to:["ancientCity","demonPass"]},
 demonPass:{name:"鎮魔關",desc:"青州北境重關。關外魔氣翻湧，只有築基以上修士才敢長期駐守。",bg:"radial-gradient(circle at 50% 10%,#573d42,#2a1d21 48%,#090708)",to:["redDesert","sectGrave"]},
 sectGrave:{name:"古宗葬地",desc:"殘破石門後是覆滅宗門的陵谷。禁制未散，傳承也未斷。",bg:"radial-gradient(circle at 50% 10%,#55514a,#292722 48%,#080908)",to:["demonPass","ruins"]},
@@ -145,7 +146,7 @@ sectGrave:[{id:"ghost",name:"殘魂道人",title:"古宗殘魂",desc:"只剩一�
 var D={realm:0,layer:0,qi:0,stones:150,age:16,lifespan:80,root:"未測",luck:0,karma:0,hp:100,maxhp:100,mp:70,maxmp:70,atk:12,def:5,crit:5,dodge:2,stage:"intro",loc:"village",tech:"青玄吐納訣",skills:["御氣斬"],knownTechs:["青玄吐納訣","御氣斬"],contrib:0,passXP:0,lastClaim:"",kills:0,
 inv:{靈草:0,妖丹:0,玄鐵:0,靈木:0,赤炎晶:0,寒鐵:0,雷紋石:0,獸骨:0,築基丹:0,回春丹:1,悟道殘頁:0,洗鍊石:0},
 gear:{weapon:{name:"木劍",slot:"weapon",rarity:1,base:{atk:2},affixes:[]},armor:{name:"粗布衣",slot:"armor",rarity:1,base:{def:1},affixes:[]},accessory:null,artifact:null},
-gearBag:[],recipes:{築基丹:false,回春丹:true},history:[],talkCount:{},storyFlags:{},fateSeen:{},relations:{lin:0,han:0,old:0,dan:0,tie:0,merchant:0,zhao:0,sword:0,inner:0,qiao:0,mu:0,yu:0,mo:0,ning:0,sha:0,hai:0,lei:0,xue:0,ghost:0},flags:{elder:false,five:false,inner:false,secret:false},lastSeen:Date.now()};
+gearBag:[],auctionListings:[],recipes:{築基丹:false,回春丹:true},history:[],talkCount:{},storyFlags:{},fateSeen:{},relations:{lin:0,han:0,old:0,dan:0,tie:0,merchant:0,zhao:0,sword:0,inner:0,qiao:0,mu:0,yu:0,mo:0,ning:0,sha:0,hai:0,lei:0,xue:0,ghost:0},flags:{elder:false,five:false,inner:false,secret:false},lastSeen:Date.now()};
 window.page="world";
 function clone(x){return JSON.parse(JSON.stringify(x))}
 function merge(a,b){for(var k in b){if(typeof a[k]==="undefined"){a[k]=clone(b[k]);continue}if(b[k]!==null&&typeof b[k]==="object"&&!Array.isArray(b[k])){if(a[k]===null||typeof a[k]!=="object")a[k]=clone(b[k]);else merge(a[k],b[k])}}}
@@ -186,7 +187,7 @@ function unlocked(loc){
   if(["spiritIsland"].indexOf(loc)>=0)return s.realm>=3;
   return true
 }
-function world(){if(!SCENES[s.loc])s.loc="gate";var sc=SCENES[s.loc]||SCENES.gate,nodes="",tos=(sc&&sc.to)||[];for(var i=0;i<tos.length;i++){var x=tos[i],lk=!unlocked(x);nodes+='<div class="mapnode '+(lk?'lock':'')+'"><b>'+SCENES[x].name+'</b><br><small>'+SCENES[x].desc.slice(0,36)+'…</small>'+(lk?'<div class="tag">境界不足</div>':'<button type="button" class="btn travel-direct" data-dest="'+x+'">前往</button>')+'</div>'}var acts="";if(["mountain","beastForest","ruins","secret","river","spiritLake","swordValley"].indexOf(s.loc)>=0)acts+=B("探索此地","explore()","danger");if(s.loc==="mission")acts+=B("領取宗門任務","mission()");if(s.loc==="library")acts+=B("查看功法目錄","showTechs()","blue");if(s.loc==="arena")acts+=B("尋人切磋","battle(1)","danger");if(s.loc==="market")acts+=B("逛坊市攤位","market()");var sectArea=["gate","outer","cave","mission","library","dan","forge","field","arena","inner","peak","starTerrace","thunderPeak"];if(sectArea.indexOf(s.loc)<0)acts+=B("踏上歸途・返回青玄宗","returnSect()","good");if(s.loc==="gate"||s.loc==="outer")acts+=B("回自己的弟子洞府","move('cave')","good");if(s.loc==="cave"){acts+=B("休養三日・療傷養神","restAtSect()","good");acts+=B("閉關七日・運轉周天","shortRetreat()","blue");acts+=B("整理洞府・查看歸宗札記","homeJournal()");}return '<div class="panel"><div class="location">'+sc.name+'</div><div class="weather">☁ 靈氣濃度：'+(s.loc==="secret"?"濃郁":s.loc==="inner"?"上佳":"尋常")+'</div><div class="story">'+sc.desc+'</div></div><div class="panel"><div class="title">附近地點</div>'+nodes+'</div>'+(acts?'<div class="panel"><div class="title">此地行動</div>'+acts+'</div>':"")}
+function world(){if(!SCENES[s.loc])s.loc="gate";var sc=SCENES[s.loc]||SCENES.gate,nodes="",tos=(sc&&sc.to)||[];for(var i=0;i<tos.length;i++){var x=tos[i],lk=!unlocked(x);nodes+='<div class="mapnode '+(lk?'lock':'')+'"><b>'+SCENES[x].name+'</b><br><small>'+SCENES[x].desc.slice(0,36)+'…</small>'+(lk?'<div class="tag">境界不足</div>':'<button type="button" class="btn travel-direct" data-dest="'+x+'">前往</button>')+'</div>'}var acts="";if(["mountain","beastForest","ruins","secret","river","spiritLake","swordValley"].indexOf(s.loc)>=0)acts+=B("探索此地","explore()","danger");if(s.loc==="mission")acts+=B("領取宗門任務","mission()");if(s.loc==="library")acts+=B("查看功法目錄","showTechs()","blue");if(s.loc==="arena")acts+=B("尋人切磋","battle(1)","danger");if(s.loc==="market")acts+=B("逛坊市攤位","market()");if(s.loc==="auctionHouse")acts+=B("進入寄賣櫃","auctionHouse()","blue");var sectArea=["gate","outer","cave","mission","library","dan","forge","field","arena","inner","peak","starTerrace","thunderPeak"];if(sectArea.indexOf(s.loc)<0)acts+=B("踏上歸途・返回青玄宗","returnSect()","good");if(s.loc==="gate"||s.loc==="outer")acts+=B("回自己的弟子洞府","move('cave')","good");if(s.loc==="cave"){acts+=B("休養三日・療傷養神","restAtSect()","good");acts+=B("閉關七日・運轉周天","shortRetreat()","blue");acts+=B("整理洞府・查看歸宗札記","homeJournal()");}return '<div class="panel"><div class="location">'+sc.name+'</div><div class="weather">☁ 靈氣濃度：'+(s.loc==="secret"?"濃郁":s.loc==="inner"?"上佳":"尋常")+'</div><div class="story">'+sc.desc+'</div></div><div class="panel"><div class="title">附近地點</div>'+nodes+'</div>'+(acts?'<div class="panel"><div class="title">此地行動</div>'+acts+'</div>':"")}
 window.move=function(x){if(!SCENES[x]){toast("地點資料錯誤");return}if(!unlocked(x)){toast("境界不足");return}document.getElementById("scene").style.opacity=.15;setTimeout(function(){s.loc=x;save();document.getElementById("scene").style.opacity=1;render()},180)}
 
 var NOVEL_DIALOGUE={
@@ -344,7 +345,7 @@ window.talk=function(id){var name=npcName(id);var body=nextNpcText(id);s.relatio
 window.storyChoice=function(id,key){var e=STORY_CHOICE[key];if(!e){toast("這段對話尚未開放");return}s.relations[id]=(s.relations[id]||0)+(e.rel||1);if(e.qi)s.qi+=e.qi;if(e.contrib)s.contrib+=e.contrib;if(e.stones)s.stones+=e.stones;if(e.luck)s.luck+=e.luck;if(e.flag)s.storyFlags[e.flag]=true;if(e.item)s.inv[e.item]=(s.inv[e.item]||0)+(e.count||1);hist("與"+npcName(id)+"的一次交談改變了某些事情。");save();document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+npcName(id)+'</div><div class="story">'+e.reply+'</div>'+B("繼續聊","talk('"+id+"')","blue")+B("記下這件事，告辭","closeModal()")+'</div></div>';};
 window.closeModal=function(){document.getElementById("modal").innerHTML="";render()}
 window.mission=function(){var r=Math.random();if(r<.33){s.contrib+=10;s.stones+=35;hist("護送靈藥車隊，獲貢獻10。");toast("任務完成")}else if(r<.66){s.contrib+=8;s.inv.靈草+=3;hist("整理靈田，獲貢獻8。");toast("獲得靈草")}else{hist("接下萬獸林獵妖任務。");toast("去萬獸林斬妖")};render()}
-window.showTechs=function(){var out="";for(var k in TECHS){var t=TECHS[k],known=s.knownTechs.indexOf(k)>=0;out+='<div class="item"><b class="r'+Math.min(5,t.tier)+'">'+k+'</b> <span class="tag">'+t.type+'</span><br><small>'+t.desc+'</small><span class="aff">'+t.bonus+'</span>'+(known?'<div class="tag">已習得</div>':(t.cost>0?B("用貢獻換取（"+t.cost+"）","learnTech(\''+k+'\')"):'<div class="tag">特殊機緣</div>'))+'</div>'}document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="title">藏經閣・功法目錄</div>'+out+B("離開","closeModal()")+'</div></div>'}
+window.showTechs=function(){var out="";for(var k in TECHS){var t=TECHS[k],known=s.knownTechs.indexOf(k)>=0;out+='<div class="item"><b class="r'+Math.min(5,t.tier)+'">'+k+'</b> <span class="tag">'+t.type+'</span><br><small>'+t.desc+'</small><span class="aff">'+t.bonus+'</span>'+(known?'<div class="tag">已習得</div>':(t.cost>0?'<button type="button" class="btn learn-tech" data-tech="'+escAttr(k)+'">用貢獻換取（'+t.cost+'）</button>':'<div class="tag">特殊機緣</div>'))+'</div>'}document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="title">藏經閣・功法目錄</div><div class="subtitle">目前宗門貢獻：'+s.contrib+'</div>'+out+B("離開","closeModal()")+'</div></div>'}
 window.learnTech=function(name){var t=TECHS[name];if(!t||s.knownTechs.indexOf(name)>=0)return;if(s.contrib<t.cost){toast("貢獻不足");return}s.contrib-=t.cost;s.knownTechs.push(name);hist("習得《"+name+"》。");toast("習得 "+name);showTechs()}
 
 function returnEvent(){var r=Math.random();if(r<.15){s.stones+=28;return "歸途中，你替一支被山匪纏上的凡人商隊解了圍。商隊掌櫃堅持塞給你二十八枚靈石。";}if(r<.28){s.qi+=12;return "山腰忽起雲海，你在崖邊停了一刻鐘。某個一直想不通的行氣節點，竟在那一刻自行通順。";}if(r<.39){s.inv.靈草=(s.inv.靈草||0)+1;return "路過一片背陰山坡時，你聞到淡淡藥香，找到一株尚未被採走的靈草。";}if(r<.47){s.hp=Math.max(1,s.hp-8);return "你抄近路時驚動了一窩赤尾蜂。雖然脫身不難，手背還是腫了半天。";}return "";}
@@ -369,8 +370,65 @@ function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function makeGear(slot,bonus){var rar=Math.min(5,Math.max(1,(bonus||1)+(Math.random()<.2?1:0)+(Math.random()<.06?1:0)));var names=slot==="weapon"?WEAPONS:slot==="armor"?ARMORS:ACCESSORIES;var g={name:names[rand(0,names.length-1)],slot:slot,rarity:rar,base:{},affixes:[]};if(slot==="weapon")g.base.atk=rand(5,10)+rar*5;if(slot==="armor")g.base.def=rand(3,7)+rar*4;if(slot==="accessory")g.base.hp=20+rar*18;var count=Math.min(5,Math.max(0,rar-1));for(var i=0;i<count;i++){var p=AFFIXES[rand(0,AFFIXES.length-1)],v=rand(p.min,p.max)+rar;g.affixes.push({name:p.name,key:p.key,value:v,suffix:p.suffix})}return g}
 function gearStats(g){var o={atk:0,def:0,hp:0,mp:0,crit:0,dodge:0};if(!g)return o;for(var k in g.base)if(typeof o[k]!=="undefined")o[k]+=g.base[k];for(var i=0;i<g.affixes.length;i++){var a=g.affixes[i];if(typeof o[a.key]!=="undefined")o[a.key]+=a.value}return o}
 function totalStats(){var o={atk:s.atk,def:s.def,hp:s.maxhp,mp:s.maxmp,crit:s.crit,dodge:s.dodge};["weapon","armor","accessory","artifact"].forEach(function(sl){var x=gearStats(s.gear[sl]);for(var k in x)o[k]+=x[k]});return o}
-function gearCard(g,i){if(!g)return "";var aff="";for(var j=0;j<g.affixes.length;j++){var a=g.affixes[j];aff+='<span class="aff">＋'+a.name+' '+a.value+a.suffix+'</span>'}var base="";for(var k in g.base)base+='<span class="aff">基礎 '+k.toUpperCase()+' +'+g.base[k]+'</span>';return '<div class="item"><b class="r'+g.rarity+'">'+["","凡品","良品","上品","極品","古品"][g.rarity]+'・'+g.name+'</b>'+base+aff+(typeof i==="number"?B("裝備","equipGear("+i+")","good"):"")+'</div>'}
-function gearPage(){var ts=totalStats(),bag="";for(var i=0;i<s.gearBag.length;i++)bag+=gearCard(s.gearBag[i],i);return '<div class="panel"><div class="title">當前裝備</div>'+gearCard(s.gear.weapon)+gearCard(s.gear.armor)+gearCard(s.gear.accessory)+gearCard(s.gear.artifact)+'</div><div class="panel"><div class="title">總屬性</div><div class="grid3">'+stat("攻擊",ts.atk)+stat("防禦",ts.def)+stat("氣血",ts.hp)+stat("靈力",ts.mp)+stat("暴擊",ts.crit+"%")+stat("閃避",ts.dodge+"%")+'</div></div><div class="panel"><div class="title">裝備袋</div>'+(bag||'<div class="story">尚無多餘裝備。去萬獸林、古域或秘境碰碰運氣。</div>')+'</div>'}
+function gearValue(g){if(!g)return 0;var v=35+g.rarity*g.rarity*42;for(var k in g.base)v+=Number(g.base[k]||0)*3;v+=(g.affixes||[]).length*28;return Math.max(30,Math.floor(v))}
+function gearCard(g,i){if(!g)return "";var aff="";for(var j=0;j<g.affixes.length;j++){var a=g.affixes[j];aff+='<span class="aff">＋'+a.name+' '+a.value+a.suffix+'</span>'}var base="";for(var k in g.base)base+='<span class="aff">基礎 '+k.toUpperCase()+' +'+g.base[k]+'</span>';var actions="";if(typeof i==="number"){actions=B("裝備","equipGear("+i+")","good")+'<button type="button" class="btn danger dismantle-gear" data-index="'+i+'">分解裝備</button>'+'<button type="button" class="btn blue consign-gear" data-index="'+i+'">帶去拍賣行寄賣｜估價 '+gearValue(g)+' 靈石</button>'}return '<div class="item"><b class="r'+g.rarity+'">'+["","凡品","良品","上品","極品","古品"][g.rarity]+'・'+g.name+'</b>'+base+aff+'<span class="aff">估價 '+gearValue(g)+' 靈石</span>'+actions+'</div>'}
+function gearPage(){var ts=totalStats(),bag="";for(var i=0;i<s.gearBag.length;i++)bag+=gearCard(s.gearBag[i],i);var auc=(s.auctionListings||[]).length;return '<div class="panel"><div class="title">當前裝備</div>'+gearCard(s.gear.weapon)+gearCard(s.gear.armor)+gearCard(s.gear.accessory)+gearCard(s.gear.artifact)+'</div><div class="panel"><div class="title">總屬性</div><div class="grid3">'+stat("攻擊",ts.atk)+stat("防禦",ts.def)+stat("氣血",ts.hp)+stat("靈力",ts.mp)+stat("暴擊",ts.crit+"%")+stat("閃避",ts.dodge+"%")+'</div></div><div class="panel"><div class="title">裝備袋</div><div class="subtitle">多餘裝備可直接分解；寄賣需前往天河拍賣行。目前寄賣 '+auc+' 件。</div>'+(bag||'<div class="story">尚無多餘裝備。去萬獸林、古域或秘境碰碰運氣。</div>')+'</div>'}
+
+window.dismantleGear=function(i){
+ var g=s.gearBag[i];if(!g){toast("找不到裝備");return}
+ var r=g.rarity||1,iron=Math.max(1,r),wood=g.slot==="weapon"?Math.max(0,r-1):0,bone=g.slot==="armor"?Math.max(0,r-1):0;
+ s.inv.玄鐵=(s.inv.玄鐵||0)+iron;
+ if(wood)s.inv.靈木=(s.inv.靈木||0)+wood;
+ if(bone)s.inv.獸骨=(s.inv.獸骨||0)+bone;
+ if(r>=4&&Math.random()<.45)s.inv.洗鍊石=(s.inv.洗鍊石||0)+1;
+ s.gearBag.splice(i,1);
+ hist("分解「"+g.name+"」，回收玄鐵×"+iron+(wood?"、靈木×"+wood:"")+(bone?"、獸骨×"+bone:"")+"。");
+ save();render();toast("分解完成・材料已回收");
+};
+window.openConsign=function(i){
+ var g=s.gearBag[i];if(!g){toast("找不到裝備");return}
+ if(s.loc!=="auctionHouse"){toast("寄賣必須親自前往天河拍賣行");return}
+ var base=gearValue(g),p1=Math.floor(base*.9),p2=Math.floor(base*1.2),p3=Math.floor(base*1.6);
+ document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="title">寄賣・'+g.name+'</div><div class="story">拍賣行規矩：上架先收售價 5% 登記費；成交後再抽 10% 佣金。流拍不退登記費。<br><br>鑑價：約 '+base+' 靈石。</div>'+
+ '<button type="button" class="btn consign-price" data-index="'+i+'" data-price="'+p1+'">求快成交｜'+p1+' 靈石</button>'+
+ '<button type="button" class="btn blue consign-price" data-index="'+i+'" data-price="'+p2+'">正常寄賣｜'+p2+' 靈石</button>'+
+ '<button type="button" class="btn purple consign-price" data-index="'+i+'" data-price="'+p3+'">高價試水｜'+p3+' 靈石</button>'+
+ B("取消","closeModal()")+'</div></div>';
+};
+window.confirmConsign=function(i,price){
+ var g=s.gearBag[i];if(!g){toast("裝備已不存在");closeModal();return}
+ price=Math.max(1,Number(price)||1);var fee=Math.max(1,Math.ceil(price*.05));
+ if(s.stones<fee){toast("靈石不足，無法支付登記費 "+fee);return}
+ s.stones-=fee;
+ s.gearBag.splice(i,1);
+ if(!s.auctionListings)s.auctionListings=[];
+ s.auctionListings.push({gear:g,price:price,fee:fee,round:0});
+ hist("將「"+g.name+"」送往天河拍賣行寄賣，標價 "+price+"，支付登記費 "+fee+" 靈石。");
+ save();closeModal();render();toast("已寄賣・登記費 "+fee+" 靈石");
+};
+window.auctionHouse=function(){
+ var list=s.auctionListings||[],out="";
+ for(var i=0;i<list.length;i++){var x=list[i];out+='<div class="item"><b class="r'+x.gear.rarity+'">'+x.gear.name+'</b><br><small>寄賣 '+x.price+' 靈石｜已等待 '+x.round+' 輪</small></div>'}
+ document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="title">天河拍賣行・寄賣櫃</div><div class="story">上架收 5% 登記費，成交再抽 10% 佣金。高於鑑價越多，成交機率越低。</div>'+
+ (out||'<div class="story">目前沒有寄賣中的裝備。</div>')+
+ (list.length?B("等待一輪拍賣結果","settleAuction()","blue"):"")+
+ B("離開拍賣行","closeModal()")+'</div></div>';
+};
+window.settleAuction=function(){
+ var list=s.auctionListings||[],remain=[],sold=0,gain=0;
+ for(var i=0;i<list.length;i++){
+  var x=list[i],base=gearValue(x.gear),ratio=x.price/base,chance=ratio<=.95?.9:ratio<=1.25?.72:ratio<=1.6?.42:.22;
+  x.round++;
+  chance=Math.min(.95,chance+x.round*.05);
+  if(Math.random()<chance){
+   var net=Math.floor(x.price*.9);s.stones+=net;sold++;gain+=net;
+   hist("拍賣行售出「"+x.gear.name+"」，成交 "+x.price+" 靈石，扣除 10% 佣金後入帳 "+net+"。");
+  }else remain.push(x);
+ }
+ s.auctionListings=remain;save();auctionHouse();
+ toast(sold?"成交 "+sold+" 件・入帳 "+gain+" 靈石":"本輪全部流拍");
+};
+
 window.equipGear=function(i){var g=s.gearBag[i];if(!g)return;var old=s.gear[g.slot];s.gear[g.slot]=g;s.gearBag.splice(i,1);if(old)s.gearBag.push(old);hist("裝備「"+g.name+"」。");render();toast("已裝備")}
 window.explore=function(){var danger=s.loc==="secret"?4:s.loc==="ruins"?3:s.loc==="beastForest"?2:1;var r=Math.random();s.passXP+=3+danger;if(r<.18){s.inv.靈草+=danger;toast("採得靈草")}else if(r<.32){s.inv.玄鐵+=danger;s.inv.靈木++;toast("取得煉器材料")}else if(r<.43){var g=makeGear(Math.random()<.5?"weapon":Math.random()<.6?"armor":"accessory",Math.min(4,danger));s.gearBag.push(g);hist("探索得到「"+g.name+"」。");toast("掉落裝備！")}else if(r<.5&&danger>=3){s.inv.洗鍊石++;toast("得到洗鍊石")}else battle(danger);render()}
 window.market=function(){if(s.stones<80){toast("靈石不足");return}s.stones-=80;s.inv.靈草+=4;s.inv.玄鐵+=2;s.inv.靈木+=1;toast("購入材料包");render()}
@@ -414,12 +472,20 @@ function runAction(code){
   var simple={
     "explore()":window.explore,"mission()":window.mission,"showTechs()":window.showTechs,
     "market()":window.market,"meditate()":window.meditate,"breakthrough()":window.breakthrough,
-    "rerollWeapon()":window.rerollWeapon,"monthly()":window.monthly,"closeModal()":window.closeModal,"returnSect()":window.returnSect,"restAtSect()":window.restAtSect,"shortRetreat()":window.shortRetreat,"homeJournal()":window.homeJournal
+    "rerollWeapon()":window.rerollWeapon,"monthly()":window.monthly,"closeModal()":window.closeModal,"returnSect()":window.returnSect,"restAtSect()":window.restAtSect,"shortRetreat()":window.shortRetreat,"homeJournal()":window.homeJournal,"auctionHouse()":window.auctionHouse,"settleAuction()":window.settleAuction
   };
   if(simple[code]) return simple[code]();
   toast("按鈕指令錯誤");
 }
 document.addEventListener("click",function(ev){
+  var techBtn=ev.target.closest ? ev.target.closest("[data-tech]") : null;
+  if(techBtn){ev.preventDefault();window.learnTech(techBtn.getAttribute("data-tech"));return}
+  var disBtn=ev.target.closest ? ev.target.closest(".dismantle-gear") : null;
+  if(disBtn){ev.preventDefault();window.dismantleGear(Number(disBtn.getAttribute("data-index")));return}
+  var conBtn=ev.target.closest ? ev.target.closest(".consign-gear") : null;
+  if(conBtn){ev.preventDefault();window.openConsign(Number(conBtn.getAttribute("data-index")));return}
+  var priceBtn=ev.target.closest ? ev.target.closest(".consign-price") : null;
+  if(priceBtn){ev.preventDefault();window.confirmConsign(Number(priceBtn.getAttribute("data-index")),Number(priceBtn.getAttribute("data-price")));return}
   var destBtn=ev.target.closest ? ev.target.closest("[data-dest]") : null;
   if(destBtn){
     ev.preventDefault();
