@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0c">
-<title>凡途 Alpha 0.5.3｜移動修正版</title>
+<title>凡途 Alpha 0.5.4｜按鈕修正版</title>
 <style>
 :root{--bg:#090b0c;--panel:#151612ef;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2;--purple:#c59ce2}
 *{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
@@ -40,11 +40,11 @@ window.addEventListener("error",function(e){
 </script>
 </head><body>
 <div id="scene"></div><div id="shade"></div>
-<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.5.3・移動修正版</span></header><section id="view"></section></main>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.5.4・按鈕修正版</span></header><section id="view"></section></main>
 <div id="toast"></div><div id="modal"></div>
 <nav><div>
-<button onclick="goPage('world')"><b>山</b>世界</button><button onclick="goPage('people')"><b>人</b>人物</button><button onclick="goPage('cultivate')"><b>☯</b>修行</button>
-<button onclick="goPage('gear')"><b>甲</b>裝備</button><button onclick="goPage('craft')"><b>鼎</b>百藝</button><button onclick="goPage('pass')"><b>令</b>仙令</button><button onclick="goPage('history')"><b>卷</b>仙史</button>
+<button data-action="goPage('world')"><b>山</b>世界</button><button data-action="goPage('people')"><b>人</b>人物</button><button data-action="goPage('cultivate')"><b>☯</b>修行</button>
+<button data-action="goPage('gear')"><b>甲</b>裝備</button><button data-action="goPage('craft')"><b>鼎</b>百藝</button><button data-action="goPage('pass')"><b>令</b>仙令</button><button data-action="goPage('history')"><b>卷</b>仙史</button>
 </div></nav>
 <script>
 (function(){
@@ -111,7 +111,8 @@ function toast(x){var e=document.getElementById("toast");e.textContent=x;e.style
 function hist(x){s.history.unshift("【"+s.age+"歲】"+x);s.history=s.history.slice(0,150)}
 function need(){return Math.round((s.realm*100+65)*(1+s.layer*.38))}
 function rn(){if(!s.realm)return "凡人";return REALMS[s.realm]+(["","初期","中期","後期","大圓滿"][s.layer]||"")}
-function B(t,f,c){return '<button class="btn '+(c||"")+'" onclick="'+f+'">'+t+'</button>'}
+function escAttr(x){return String(x).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function B(t,f,c){return '<button type="button" class="btn '+(c||"")+'" data-action="'+escAttr(f)+'">'+t+'</button>'}
 function stat(a,b){return '<div class="stat"><small>'+a+'</small><b>'+b+'</b></div>'}
 function top(){return '<div class="panel stats">'+stat("境界",rn())+stat("修為",s.qi+"/"+need())+stat("靈石",s.stones)+stat("靈根",s.root)+stat("宗門貢獻",s.contrib)+stat("壽元",s.age+"/"+s.lifespan)+'</div>'}
 window.goPage=function(p){page=p;render()}
@@ -196,21 +197,35 @@ window.monthly=function(){var d=new Date().toISOString().slice(0,10);if(s.lastCl
 function history(){return '<div class="panel"><div class="title">此世仙史</div><div class="story">靈根：'+s.root+'\n境界：'+rn()+'\n心法：'+s.tech+'\n已習功法：'+s.knownTechs.length+' 部\n斬妖：'+s.kills+'\n因果：'+s.karma+'</div></div><div class="panel"><div class="title">生平紀錄</div><div class="log">'+(s.history.join("<br>")||"尚無記載")+'</div></div>'}
 function offline(){var now=Date.now(),mins=Math.floor((now-(s.lastSeen||now))/60000);if(mins>=10&&s.stage==="game"){var cap=Math.min(mins,480),g=Math.floor(cap/10)*(3+s.realm);if(g>0){s.qi+=g;setTimeout(function(){toast("離線修行：修為 +"+g)},600)}}}
 
+function runAction(code){
+  code=String(code||"").trim();
+  var m;
+  if((m=code.match(/^move\('([^']+)'\)$/))) return window.move(m[1]);
+  if((m=code.match(/^goPage\('([^']+)'\)$/))) return window.goPage(m[1]);
+  if((m=code.match(/^start\((-?\d+)\)$/))) return window.start(Number(m[1]));
+  if((m=code.match(/^talk\('([^']+)'\)$/))) return window.talk(m[1]);
+  if((m=code.match(/^choiceTalk\('([^']+)','([^']+)'\)$/))) return window.choiceTalk(m[1],m[2]);
+  if((m=code.match(/^learnTech\('([^']+)'\)$/))) return window.learnTech(m[1]);
+  if((m=code.match(/^setTech\('([^']+)'\)$/))) return window.setTech(m[1]);
+  if((m=code.match(/^battle\((\d+)\)$/))) return window.battle(Number(m[1]));
+  if((m=code.match(/^turn\('([^']+)'\)$/))) return window.turn(m[1]);
+  if((m=code.match(/^makePill\('([^']+)'\)$/))) return window.makePill(m[1]);
+  if((m=code.match(/^forge\('([^']+)'\)$/))) return window.forge(m[1]);
+  if((m=code.match(/^equipGear\((\d+)\)$/))) return window.equipGear(Number(m[1]));
+  var simple={
+    "explore()":window.explore,"mission()":window.mission,"showTechs()":window.showTechs,
+    "market()":window.market,"meditate()":window.meditate,"breakthrough()":window.breakthrough,
+    "rerollWeapon()":window.rerollWeapon,"monthly()":window.monthly,"closeModal()":window.closeModal
+  };
+  if(simple[code]) return simple[code]();
+  toast("按鈕指令錯誤");
+}
 document.addEventListener("click",function(ev){
-  var travel=ev.target.closest ? ev.target.closest("[data-move]") : null;
-  if(travel){
-    ev.preventDefault();
-    window.move(travel.getAttribute("data-move"));
-    return;
-  }
+  var btn=ev.target.closest ? ev.target.closest("[data-action]") : null;
+  if(!btn) return;
+  ev.preventDefault();
+  runAction(btn.getAttribute("data-action"));
 });
-document.addEventListener("touchend",function(ev){
-  var travel=ev.target.closest ? ev.target.closest("[data-move]") : null;
-  if(travel){
-    ev.preventDefault();
-    window.move(travel.getAttribute("data-move"));
-  }
-},{passive:false});
 
 function boot(){
  try{
