@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0c">
-<title>凡途 Alpha 0.5.4｜按鈕修正版</title>
+<title>凡途 Alpha 0.5.5｜移動實修版</title>
 <style>
 :root{--bg:#090b0c;--panel:#151612ef;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2;--purple:#c59ce2}
 *{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
@@ -40,7 +40,7 @@ window.addEventListener("error",function(e){
 </script>
 </head><body>
 <div id="scene"></div><div id="shade"></div>
-<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.5.4・按鈕修正版</span></header><section id="view"></section></main>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.5.5・移動實修版</span></header><section id="view"></section></main>
 <div id="toast"></div><div id="modal"></div>
 <nav><div>
 <button data-action="goPage('world')"><b>山</b>世界</button><button data-action="goPage('people')"><b>人</b>人物</button><button data-action="goPage('cultivate')"><b>☯</b>修行</button>
@@ -200,17 +200,17 @@ function offline(){var now=Date.now(),mins=Math.floor((now-(s.lastSeen||now))/60
 function runAction(code){
   code=String(code||"").trim();
   var m;
-  if((m=code.match(/^move\('([^']+)'\)$/))) return window.move(m[1]);
-  if((m=code.match(/^goPage\('([^']+)'\)$/))) return window.goPage(m[1]);
+  if((m=code.match(/^move\((['"])(.*?)\1\)$/))) return window.move(m[2]);
+  if((m=code.match(/^goPage\((['"])(.*?)\1\)$/))) return window.goPage(m[2]);
   if((m=code.match(/^start\((-?\d+)\)$/))) return window.start(Number(m[1]));
-  if((m=code.match(/^talk\('([^']+)'\)$/))) return window.talk(m[1]);
-  if((m=code.match(/^choiceTalk\('([^']+)','([^']+)'\)$/))) return window.choiceTalk(m[1],m[2]);
-  if((m=code.match(/^learnTech\('([^']+)'\)$/))) return window.learnTech(m[1]);
-  if((m=code.match(/^setTech\('([^']+)'\)$/))) return window.setTech(m[1]);
+  if((m=code.match(/^talk\((['"])(.*?)\1\)$/))) return window.talk(m[2]);
+  if((m=code.match(/^choiceTalk\((['"])(.*?)\1,(['"])(.*?)\3\)$/))) return window.choiceTalk(m[2],m[4]);
+  if((m=code.match(/^learnTech\((['"])(.*?)\1\)$/))) return window.learnTech(m[2]);
+  if((m=code.match(/^setTech\((['"])(.*?)\1\)$/))) return window.setTech(m[2]);
   if((m=code.match(/^battle\((\d+)\)$/))) return window.battle(Number(m[1]));
-  if((m=code.match(/^turn\('([^']+)'\)$/))) return window.turn(m[1]);
-  if((m=code.match(/^makePill\('([^']+)'\)$/))) return window.makePill(m[1]);
-  if((m=code.match(/^forge\('([^']+)'\)$/))) return window.forge(m[1]);
+  if((m=code.match(/^turn\((['"])(.*?)\1\)$/))) return window.turn(m[2]);
+  if((m=code.match(/^makePill\((['"])(.*?)\1\)$/))) return window.makePill(m[2]);
+  if((m=code.match(/^forge\((['"])(.*?)\1\)$/))) return window.forge(m[2]);
   if((m=code.match(/^equipGear\((\d+)\)$/))) return window.equipGear(Number(m[1]));
   var simple={
     "explore()":window.explore,"mission()":window.mission,"showTechs()":window.showTechs,
