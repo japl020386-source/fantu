@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0c">
-<title>凡途 Alpha 0.5.7｜移動核心重做</title>
+<title>凡途 Alpha 0.6｜青州擴張</title>
 <style>
 :root{--bg:#090b0c;--panel:#151612ef;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2;--purple:#c59ce2}
 *{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
@@ -40,7 +40,7 @@ window.addEventListener("error",function(e){
 </script>
 </head><body>
 <div id="scene"></div><div id="shade"></div>
-<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.5.7・移動核心重做</span></header><section id="view"></section></main>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.6・青州擴張</span></header><section id="view"></section></main>
 <div id="toast"></div><div id="modal"></div>
 <nav><div>
 <button data-action="goPage('world')"><b>山</b>世界</button><button data-action="goPage('people')"><b>人</b>人物</button><button data-action="goPage('cultivate')"><b>☯</b>修行</button>
@@ -50,7 +50,7 @@ window.addEventListener("error",function(e){
 (function(){
 var REALMS=["凡人","煉氣","築基","金丹","元嬰","化神","煉虛","合體","大乘","渡劫"];
 var SCENES={
-village:{name:"青雲村",desc:"炊煙沿著青石屋瓦升起。凡人只談柴米，少有人相信世上真有長生。",bg:"radial-gradient(circle at 50% 18%,#80633d,#2c281f 44%,#0b0d0d)",to:["gate","river"]},
+village:{name:"青雲村",desc:"炊煙沿著青石屋瓦升起。凡人只談柴米，少有人相信世上真有長生。",bg:"radial-gradient(circle at 50% 18%,#80633d,#2c281f 44%,#0b0d0d)",to:["gate","river","ancientCity"]},
 river:{name:"落霞河",desc:"河水穿過青州平原，偶爾有散修沿河尋找靈砂。",bg:"radial-gradient(circle at 50% 15%,#4f7480,#27363a 45%,#090b0b)",to:["village","market"]},
 gate:{name:"青玄宗・山門",desc:"千級石階沒入雲海，青玄二字刻在百丈山壁之上。",bg:"radial-gradient(circle at 50% 10%,#66808a,#263b3d 40%,#0b0d0d)",to:["village","outer","market"]},
 outer:{name:"青玄宗・外門",desc:"晨鐘迴盪。數百外門弟子在山腰洞府間來往。",bg:"radial-gradient(circle at 40% 10%,#526c58,#26372c 42%,#0b0d0d)",to:["gate","mission","library","dan","forge","field","arena","mountain"]},
@@ -62,13 +62,25 @@ field:{name:"靈田谷",desc:"整齊藥田沿谷鋪開。外門弟子常來做�
 spiritLake:{name:"碧靈湖",desc:"湖面靈霧不散。相傳湖底曾鎮著一件古修法寶。",bg:"radial-gradient(circle at 50% 15%,#477483,#24363d 45%,#090b0b)",to:["field","swordValley"]},
 swordValley:{name:"落劍谷",desc:"谷壁插著無數殘劍。風過時，如萬劍低鳴。",bg:"radial-gradient(circle at 50% 12%,#5c6264,#282c2d 45%,#090b0b)",to:["spiritLake","ruins"]},
 arena:{name:"演武台",desc:"弟子切磋、外門小比、宗門大比，都在此處進行。",bg:"radial-gradient(circle at 50% 15%,#70513b,#35291f 45%,#090b0b)",to:["outer"]},
-market:{name:"青玄坊市",desc:"散修、商隊與宗門弟子在此交換靈石、丹藥、裝備與消息。",bg:"radial-gradient(circle at 50% 15%,#79633d,#342f25 45%,#0b0d0d)",to:["gate","river","beastForest"]},
+market:{name:"青玄坊市",desc:"散修、商隊與宗門弟子在此交換靈石、丹藥、裝備與消息。",bg:"radial-gradient(circle at 50% 15%,#79633d,#342f25 45%,#0b0d0d)",to:["gate","river","beastForest","ancientCity"]},
 mountain:{name:"宗門後山",desc:"越過警戒石碑後，林間開始出現妖獸足跡。",bg:"radial-gradient(circle at 50% 10%,#36523c,#1d3025 45%,#090b0b)",to:["outer","beastForest","secret"]},
 beastForest:{name:"萬獸林",desc:"妖氣濃重。越深入，妖獸越強，掉落也越珍稀。",bg:"radial-gradient(circle at 50% 12%,#3e583b,#1c2a20 48%,#080a09)",to:["market","mountain","ruins"]},
 ruins:{name:"斷碑古域",desc:"殘碑埋在荒草間。這片遺跡不屬於青玄宗，也不屬於這個時代。",bg:"radial-gradient(circle at 50% 10%,#686051,#302e2a 46%,#090a0a)",to:["beastForest","swordValley","secret"]},
 secret:{name:"霧隱秘境",desc:"銀白霧氣遮蔽神識。靈藥、妖獸與古修洞府隨機出現。",bg:"radial-gradient(circle at 50% 15%,#556d72,#27363a 45%,#090b0b)",to:["mountain","ruins"]},
 inner:{name:"青玄宗・內門",desc:"踏入築基後，才真正看見青玄宗的底蘊。",bg:"radial-gradient(circle at 50% 12%,#6c7f74,#2d3d38 45%,#090b0b)",to:["outer","peak"]},
-peak:{name:"青玄主峰",desc:"雲海之上，長老洞府與宗門大殿靜立。",bg:"radial-gradient(circle at 50% 10%,#79828a,#30373c 45%,#090b0b)",to:["inner"]}
+peak:{name:"青玄主峰",desc:"雲海之上，長老洞府與宗門大殿靜立。",bg:"radial-gradient(circle at 50% 10%,#79828a,#30373c 45%,#090b0b)",to:["inner","starTerrace"]},
+starTerrace:{name:"觀星台",desc:"主峰最高處，夜裡可見漫天星河。據說高階修士會在此推演天機。",bg:"radial-gradient(circle at 50% 8%,#3f4868,#20253a 48%,#08090d)",to:["peak","thunderPeak"]},
+thunderPeak:{name:"驚雷峰",desc:"終年雷雲不散，岩壁上佈滿被天雷劈出的焦痕。",bg:"radial-gradient(circle at 50% 10%,#596173,#2b2f3a 46%,#090a0d)",to:["starTerrace","frostCave"]},
+frostCave:{name:"玄冰洞",desc:"洞中寒氣刺骨，冰壁深處偶有藍光閃爍。",bg:"radial-gradient(circle at 50% 10%,#6690a3,#273c47 46%,#080a0d)",to:["thunderPeak","spiritMine"]},
+spiritMine:{name:"靈石礦脈",desc:"青玄宗重要資源地。礦坑越深，靈氣越重，也越容易出現地底妖獸。",bg:"radial-gradient(circle at 50% 12%,#625a48,#302a22 46%,#090908)",to:["frostCave","blackMarsh"]},
+blackMarsh:{name:"黑水澤",desc:"黑霧貼著水面流動，毒蟲、陰草與水妖共生。",bg:"radial-gradient(circle at 50% 12%,#364c42,#18271f 48%,#070908)",to:["spiritMine","moonCliff","ancientCity"]},
+moonCliff:{name:"望月崖",desc:"崖下萬丈雲海，月圓之夜常有劍修來此悟道。",bg:"radial-gradient(circle at 50% 10%,#5d6680,#293041 48%,#08090c)",to:["blackMarsh","swordValley"]},
+ancientCity:{name:"天河古城",desc:"一座由散修與商會共同維持的古城，丹鋪、拍賣行、客棧與情報組織林立。",bg:"radial-gradient(circle at 50% 12%,#7b6044,#382d23 45%,#0b0a09)",to:["blackMarsh","redDesert","seaPort"]},
+redDesert:{name:"赤砂荒漠",desc:"白日灼熱，夜晚刺寒。流沙下埋著不知多少古戰場遺物。",bg:"radial-gradient(circle at 50% 12%,#a0643e,#4a2d20 46%,#100908)",to:["ancientCity","demonPass"]},
+demonPass:{name:"鎮魔關",desc:"青州北境重關。關外魔氣翻湧，只有築基以上修士才敢長期駐守。",bg:"radial-gradient(circle at 50% 10%,#573d42,#2a1d21 48%,#090708)",to:["redDesert","sectGrave"]},
+sectGrave:{name:"古宗葬地",desc:"殘破石門後是覆滅宗門的陵谷。禁制未散，傳承也未斷。",bg:"radial-gradient(circle at 50% 10%,#55514a,#292722 48%,#080908)",to:["demonPass","ruins"]},
+seaPort:{name:"雲海港",desc:"飛舟與海船停泊於此。商旅口中，海外有真正不屬於青州的修仙世界。",bg:"radial-gradient(circle at 50% 10%,#4d7180,#243843 46%,#080a0c)",to:["ancientCity","spiritIsland"]},
+spiritIsland:{name:"靈潮島",desc:"島上每逢靈潮便會湧出大量靈氣與海獸，是散修爭奪機緣之地。",bg:"radial-gradient(circle at 50% 10%,#41736f,#203b38 46%,#070a09)",to:["seaPort"]}
 };
 var TECHS={
 "青玄吐納訣":{type:"心法",tier:1,cost:0,desc:"青玄宗入門吐納法。",bonus:"修煉效率 +0%"},
@@ -82,7 +94,27 @@ var TECHS={
 "驚雷指":{type:"術法",tier:4,cost:55,desc:"雷法迅烈，極難修成。",bonus:"暴擊 +8%"},
 "九轉鍛體訣":{type:"煉體",tier:4,cost:60,desc:"以靈力反覆淬鍊肉身。",bonus:"氣血、防禦提升"},
 "殘缺五行訣":{type:"心法",tier:4,cost:0,desc:"五行俱全，方可自成天地。",bonus:"五靈根隱藏道途"},
-"太虛劍典・殘頁":{type:"劍訣",tier:5,cost:0,desc:"只是一頁，卻讓人不敢直視其中劍意。",bonus:"古修傳承"}
+"太虛劍典・殘頁":{type:"劍訣",tier:5,cost:0,desc:"只是一頁，卻讓人不敢直視其中劍意。",bonus:"古修傳承"},
+"厚土功":{type:"心法",tier:2,cost:15,desc:"土行心法，行氣沉穩，適合持久修行。",bonus:"防禦傾向"},
+"赤陽訣":{type:"心法",tier:3,cost:32,desc:"火行心法，修行時陽氣旺盛。",bonus:"火系傷害提升"},
+"玄水經":{type:"心法",tier:3,cost:32,desc:"水行心法，靈力綿長不絕。",bonus:"靈力上限提升"},
+"青木長生功":{type:"心法",tier:3,cost:35,desc:"木行養生心法，擅長恢復與延壽。",bonus:"恢復傾向"},
+"庚金劍氣":{type:"劍訣",tier:3,cost:34,desc:"以金靈氣凝成劍氣，鋒銳異常。",bonus:"劍系攻擊"},
+"落霞十三劍":{type:"劍訣",tier:3,cost:38,desc:"十三式連綿如霞，重節奏與連擊。",bonus:"連擊傾向"},
+"崩山拳":{type:"拳法",tier:3,cost:34,desc:"近身爆發拳術，一拳崩石。",bonus:"高爆發"},
+"伏魔棍經":{type:"棍法",tier:3,cost:34,desc:"守中帶攻，尤其克制邪祟。",bonus:"對魔修增傷"},
+"追星步":{type:"身法",tier:3,cost:28,desc:"步法迅捷，適合追擊與脫戰。",bonus:"閃避與逃跑"},
+"金鐘護體訣":{type:"煉體",tier:3,cost:36,desc:"靈氣凝於體表，如鐘罩護身。",bonus:"防禦提升"},
+"血煞燃元術":{type:"秘術",tier:4,cost:0,desc:"燃燒精元換取短暫戰力，代價極大。",bonus:"危險爆發"},
+"紫霄雷法":{type:"術法",tier:4,cost:70,desc:"引紫雷落敵，威力遠勝普通雷法。",bonus:"雷系高傷"},
+"玄冰封脈術":{type:"術法",tier:4,cost:65,desc:"以玄冰靈力封鎖敵人氣機。",bonus:"控制傾向"},
+"離火焚天印":{type:"術法",tier:4,cost:72,desc:"丹火化戰火，一印落下如火海。",bonus:"火系範圍傷害"},
+"大衍藏息術":{type:"秘術",tier:4,cost:58,desc:"收斂氣息與神識波動，適合秘境與追殺。",bonus:"探索傾向"},
+"星河觀想法":{type:"神識",tier:4,cost:62,desc:"觀星海以淬神識，提升感知。",bonus:"神識提升"},
+"天罡鍛骨篇":{type:"煉體",tier:4,cost:68,desc:"以罡氣淬骨，肉身如法器。",bonus:"氣血與防禦"},
+"萬木回春術":{type:"術法",tier:4,cost:60,desc:"青木回春術進階法門。",bonus:"強力恢復"},
+"無相遁法":{type:"身法",tier:5,cost:0,desc:"傳聞能在生死一線遁出百里。",bonus:"古修身法"},
+"五行輪轉經":{type:"心法",tier:5,cost:0,desc:"五行生剋輪轉，非五行俱全者難以修行。",bonus:"五行道基進階"}
 };
 var NPCS={
 outer:[
@@ -95,12 +127,24 @@ forge:[{id:"tie",name:"鐵山",title:"器峰長老",desc:"說話像打鐵，一�
 market:[{id:"merchant",name:"蘇九娘",title:"坊市商人",desc:"只要有靈石，她似乎什麼都能弄到。"}],
 arena:[{id:"zhao",name:"趙無鋒",title:"外門弟子",desc:"一直想在外門小比前找人試招。"}],
 swordValley:[{id:"sword",name:"白衣劍客",title:"神秘劍修",desc:"不知何時出現在谷底，也不知是否為青玄宗之人。"}],
-inner:[{id:"inner",name:"顧長青",title:"內門師兄",desc:"築基後才有資格真正與他論道。"}]
+inner:[{id:"inner",name:"顧長青",title:"內門師兄",desc:"築基後才有資格真正與他論道。"}],
+mission:[{id:"qiao",name:"喬遠山",title:"任務堂管事",desc:"手裡總有做不完的委託與缺人的危險任務。"}],
+field:[{id:"mu",name:"木小禾",title:"靈植弟子",desc:"常年待在靈田，對藥草比對人熟悉。"}],
+spiritLake:[{id:"yu",name:"余晚舟",title:"釣叟",desc:"每天坐在碧靈湖邊，誰也不知道他究竟在釣魚還是在等什麼。"}],
+ancientCity:[
+{id:"mo",name:"莫掌櫃",title:"萬寶樓掌櫃",desc:"笑容和氣，眼神卻像能估出你身上每件東西的價格。"},
+{id:"ning",name:"寧紅袖",title:"情報販子",desc:"天河古城裡消息最靈通的人之一。"}
+],
+redDesert:[{id:"sha",name:"沙行客",title:"荒漠散修",desc:"一身風沙，腰間掛著三只不同妖獸的牙。"}],
+seaPort:[{id:"hai",name:"海七",title:"飛舟船主",desc:"跑過海外航線，嘴裡十句有九句真假難辨。"}],
+thunderPeak:[{id:"lei",name:"雷千岳",title:"雷峰執事",desc:"聲如洪鐘，周身常有細小雷弧游走。"}],
+frostCave:[{id:"xue",name:"雪無痕",title:"冰修",desc:"獨自在玄冰洞修行，幾乎不與宗門往來。"}],
+sectGrave:[{id:"ghost",name:"殘魂道人",title:"古宗殘魂",desc:"只剩一縷神念，仍守著早已覆滅的山門。"}]
 };
 var D={realm:0,layer:0,qi:0,stones:150,age:16,lifespan:80,root:"未測",luck:0,karma:0,hp:100,maxhp:100,mp:70,maxmp:70,atk:12,def:5,crit:5,dodge:2,stage:"intro",loc:"village",tech:"青玄吐納訣",skills:["御氣斬"],knownTechs:["青玄吐納訣","御氣斬"],contrib:0,passXP:0,lastClaim:"",kills:0,
 inv:{靈草:0,妖丹:0,玄鐵:0,靈木:0,赤炎晶:0,寒鐵:0,雷紋石:0,獸骨:0,築基丹:0,回春丹:1,悟道殘頁:0,洗鍊石:0},
 gear:{weapon:{name:"木劍",slot:"weapon",rarity:1,base:{atk:2},affixes:[]},armor:{name:"粗布衣",slot:"armor",rarity:1,base:{def:1},affixes:[]},accessory:null,artifact:null},
-gearBag:[],recipes:{築基丹:false,回春丹:true},history:[],relations:{lin:0,han:0,old:0,dan:0,tie:0,merchant:0,zhao:0,sword:0,inner:0},flags:{elder:false,five:false,inner:false,secret:false},lastSeen:Date.now()};
+gearBag:[],recipes:{築基丹:false,回春丹:true},history:[],relations:{lin:0,han:0,old:0,dan:0,tie:0,merchant:0,zhao:0,sword:0,inner:0,qiao:0,mu:0,yu:0,mo:0,ning:0,sha:0,hai:0,lei:0,xue:0,ghost:0},flags:{elder:false,five:false,inner:false,secret:false},lastSeen:Date.now()};
 window.page="world";
 function clone(x){return JSON.parse(JSON.stringify(x))}
 function merge(a,b){for(var k in b){if(typeof a[k]==="undefined"){a[k]=clone(b[k]);continue}if(b[k]!==null&&typeof b[k]==="object"&&!Array.isArray(b[k])){if(a[k]===null||typeof a[k]!=="object")a[k]=clone(b[k]);else merge(a[k],b[k])}}}
@@ -136,11 +180,15 @@ function setScene(){if(!SCENES[s.loc])s.loc="gate";var sc=SCENES[s.loc]||SCENES.
 window.render=function(){try{setScene();var v=document.getElementById("view");if(s.stage==="intro"){intro();return}var h=top();if(page==="world")v.innerHTML=h+world();if(page==="people")v.innerHTML=h+people();if(page==="cultivate")v.innerHTML=h+cultivate();if(page==="gear")v.innerHTML=h+gearPage();if(page==="craft")v.innerHTML=h+craft();if(page==="pass")v.innerHTML=h+pass();if(page==="history")v.innerHTML=h+history();save()}catch(e){document.getElementById("view").innerHTML='<div class="panel"><b>程式錯誤</b><br>'+e.message+'</div>'}}
 function intro(){document.getElementById("view").innerHTML='<div class="panel"><div class="title">第一世・青雲村</div><div class="story">大乾王朝，青州邊陲。\n\n十六年來，你只在說書人口中聽過仙人。\n\n直到暴雨夜，一名白衣老者倒在你家門前。他胸口染血，腰間掛著青色儲物袋。\n\n遠處，追殺者的腳步聲越來越近。</div>'+B("先救人，再問來歷","start(1)","good")+B("取走儲物袋，再將人藏起","start(-1)")+B("關門。不沾這場因果","start(0)")+'</div>'}
 window.start=function(c){s.karma=c;s.flags.elder=c!==0;var r=Math.random()*100;s.root=r<3?"天靈根":r<10?"異靈根":r<28?"雙靈根":r<62?"三靈根":"五靈根";s.realm=1;s.layer=1;s.lifespan=125;s.loc="gate";s.stage="game";hist("測靈大典，測出「"+s.root+"」，踏入煉氣。");if(s.root==="五靈根"){s.flags.five=true;hist("靈根駁雜，被執事評為下等資質。")}if(c===1){s.luck+=2;hist("白衣老者臨別贈你一枚無字玉牌。")}render()}
-function unlocked(loc){if(loc==="inner"||loc==="peak")return s.realm>=2;return true}
-function world(){if(!SCENES[s.loc])s.loc="gate";var sc=SCENES[s.loc]||SCENES.gate,nodes="",tos=(sc&&sc.to)||[];for(var i=0;i<tos.length;i++){var x=tos[i],lk=!unlocked(x);nodes+='<div class="mapnode '+(lk?'lock':'')+'"><b>'+SCENES[x].name+'</b><br><small>'+SCENES[x].desc.slice(0,36)+'…</small>'+(lk?'<div class="tag">築基後開放</div>':'<button type="button" class="btn travel-direct" data-dest="'+x+'">前往</button>')+'</div>'}var acts="";if(["mountain","beastForest","ruins","secret","river","spiritLake","swordValley"].indexOf(s.loc)>=0)acts+=B("探索此地","explore()","danger");if(s.loc==="mission")acts+=B("領取宗門任務","mission()");if(s.loc==="library")acts+=B("查看功法目錄","showTechs()","blue");if(s.loc==="arena")acts+=B("尋人切磋","battle(1)","danger");if(s.loc==="market")acts+=B("逛坊市攤位","market()");return '<div class="panel"><div class="location">'+sc.name+'</div><div class="weather">☁ 靈氣濃度：'+(s.loc==="secret"?"濃郁":s.loc==="inner"?"上佳":"尋常")+'</div><div class="story">'+sc.desc+'</div></div><div class="panel"><div class="title">附近地點</div>'+nodes+'</div>'+(acts?'<div class="panel"><div class="title">此地行動</div>'+acts+'</div>':"")}
+function unlocked(loc){
+  if(["inner","peak","starTerrace","thunderPeak","frostCave","spiritMine","demonPass","sectGrave"].indexOf(loc)>=0)return s.realm>=2;
+  if(["spiritIsland"].indexOf(loc)>=0)return s.realm>=3;
+  return true
+}
+function world(){if(!SCENES[s.loc])s.loc="gate";var sc=SCENES[s.loc]||SCENES.gate,nodes="",tos=(sc&&sc.to)||[];for(var i=0;i<tos.length;i++){var x=tos[i],lk=!unlocked(x);nodes+='<div class="mapnode '+(lk?'lock':'')+'"><b>'+SCENES[x].name+'</b><br><small>'+SCENES[x].desc.slice(0,36)+'…</small>'+(lk?'<div class="tag">境界不足</div>':'<button type="button" class="btn travel-direct" data-dest="'+x+'">前往</button>')+'</div>'}var acts="";if(["mountain","beastForest","ruins","secret","river","spiritLake","swordValley"].indexOf(s.loc)>=0)acts+=B("探索此地","explore()","danger");if(s.loc==="mission")acts+=B("領取宗門任務","mission()");if(s.loc==="library")acts+=B("查看功法目錄","showTechs()","blue");if(s.loc==="arena")acts+=B("尋人切磋","battle(1)","danger");if(s.loc==="market")acts+=B("逛坊市攤位","market()");return '<div class="panel"><div class="location">'+sc.name+'</div><div class="weather">☁ 靈氣濃度：'+(s.loc==="secret"?"濃郁":s.loc==="inner"?"上佳":"尋常")+'</div><div class="story">'+sc.desc+'</div></div><div class="panel"><div class="title">附近地點</div>'+nodes+'</div>'+(acts?'<div class="panel"><div class="title">此地行動</div>'+acts+'</div>':"")}
 window.move=function(x){if(!SCENES[x]){toast("地點資料錯誤");return}if(!unlocked(x)){toast("境界不足");return}document.getElementById("scene").style.opacity=.15;setTimeout(function(){s.loc=x;save();document.getElementById("scene").style.opacity=1;render()},180)}
 function people(){var arr=NPCS[s.loc]||[],out="";if(!arr.length)out='<div class="story">此地暫無重要人物。四處走走，也許會遇見新的因果。</div>';for(var i=0;i<arr.length;i++){var n=arr[i];out+='<div class="item"><b>'+n.name+'</b> <span class="tag">'+n.title+'</span><br><small>'+n.desc+'</small><br><small>好感：'+(s.relations[n.id]||0)+'</small>'+B("交談","talk(\''+n.id+'\')")+'</div>'}return '<div class="panel"><div class="title">附近人物</div>'+out+'</div>'}
-window.talk=function(id){var name={lin:"林清霜",han:"韓執事",old:"守閣老人",dan:"丹辰子",tie:"鐵山",merchant:"蘇九娘",zhao:"趙無鋒",sword:"白衣劍客",inner:"顧長青"}[id]||"陌生人";var body="",opts="";
+window.talk=function(id){var name={lin:"林清霜",han:"韓執事",old:"守閣老人",dan:"丹辰子",tie:"鐵山",merchant:"蘇九娘",zhao:"趙無鋒",sword:"白衣劍客",inner:"顧長青",qiao:"喬遠山",mu:"木小禾",yu:"余晚舟",mo:"莫掌櫃",ning:"寧紅袖",sha:"沙行客",hai:"海七",lei:"雷千岳",xue:"雪無痕",ghost:"殘魂道人"}[id]||"陌生人";var body="",opts="";
 if(id==="lin"){body="她收劍入鞘，淡淡看你一眼。\n「修仙不是坐著等境界自己長出來。」";opts=B("請教師姐劍術","choiceTalk('lin','learn')")+B("聊聊最近的宗門傳聞","choiceTalk('lin','rumor')")+B("送上一株靈草","choiceTalk('lin','gift')","good")}
 if(id==="han"){body="韓執事笑得很和氣。\n「宗門不養閒人。想要功法、丹藥、靈石，就得有貢獻。」";opts=B("詢問高報酬任務","choiceTalk('han','job')")+B("套問後山秘境消息","choiceTalk('han','secret')")}
 if(id==="old"){body="老人沒有抬頭，只翻了翻手中的破舊竹簡。\n「功法沒有強弱，只有人能不能活到把它練成。」";opts=B("詢問五靈根","choiceTalk('old','five')")+B("請教高階功法","choiceTalk('old','tech')")}
@@ -150,6 +198,16 @@ if(id==="merchant"){body="蘇九娘笑吟吟地推來一杯靈茶。\n「消息�
 if(id==="zhao"){body="趙無鋒捏了捏拳頭。\n「別只會閉關。來，打一場。」";opts=B("接受切磋","battle(1)","danger")+B("先聊兩句","choiceTalk('zhao','chat')")}
 if(id==="sword"){body="白衣劍客背對著你，谷風吹動衣袂。\n「劍不是兵器，是你願不願意斬掉退路。」";opts=B("觀摩他的劍意","choiceTalk('sword','observe')")+B("問他姓名","choiceTalk('sword','name')")}
 if(id==="inner"){body="顧長青負手而立。\n「築基只是開始。外門時爭資源，內門開始爭大道。」";opts=B("請教內門修行","choiceTalk('inner','guide')")+B("詢問主峰","choiceTalk('inner','peak')")}
+if(id==="qiao"){body="喬遠山掃了你一眼。\n「任務有三種：賺靈石的、賺貢獻的，還有拿命換機緣的。」";opts=B("接普通委託","mission()")+B("詢問高危委託","choiceTalk('qiao','risk')")}
+if(id==="mu"){body="木小禾蹲在藥圃邊，小心撥開靈草葉片。\n「靈藥跟人一樣，急著催只會傷根。」";opts=B("請教靈植","choiceTalk('mu','herb')")+B("幫忙照料藥田","choiceTalk('mu','work')")}
+if(id==="yu"){body="余晚舟盯著平靜湖面。\n「魚不上鉤時，才最適合想事情。」";opts=B("詢問湖底傳聞","choiceTalk('yu','lake')")+B("陪他坐一會","choiceTalk('yu','sit')")}
+if(id==="mo"){body="莫掌櫃撥了撥算盤。\n「寶物沒有貴不貴，只看你需不需要。」";opts=B("看看材料","market()")+B("詢問稀有裝備","choiceTalk('mo','gear')")}
+if(id==="ning"){body="寧紅袖壓低聲音。\n「你想知道的事，通常都有人不想讓你知道。」";opts=B("打聽古宗葬地","choiceTalk('ning','grave')")+B("打聽海外","choiceTalk('ning','sea')")}
+if(id==="sha"){body="沙行客擦去刀鞘上的沙。\n「赤砂荒漠會埋人，也會吐寶。」";opts=B("詢問荒漠遺跡","choiceTalk('sha','ruin')")+B("交換獵妖心得","choiceTalk('sha','hunt')")}
+if(id==="hai"){body="海七咧嘴一笑。\n「青州只是陸上的一角。出了海，才知道世界多大。」";opts=B("詢問靈潮島","choiceTalk('hai','island')")+B("詢問海外宗門","choiceTalk('hai','sect')")}
+if(id==="lei"){body="雷千岳掌心雷弧炸響。\n「怕雷的人練不了雷法。」";opts=B("請教雷法","choiceTalk('lei','teach')")+B("觀摩引雷","choiceTalk('lei','watch')")}
+if(id==="xue"){body="雪無痕睜開眼，寒氣在睫毛上凝成霜。\n「心亂，冰就不純。」";opts=B("請教冰術","choiceTalk('xue','teach')")+B("詢問玄冰洞深處","choiceTalk('xue','deep')")}
+if(id==="ghost"){body="殘魂道人望著早已不存在的山門。\n「宗門會滅，道統未必。」";opts=B("詢問古宗傳承","choiceTalk('ghost','legacy')")+B("詢問覆滅原因","choiceTalk('ghost','fall')")}
 document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+name+'</div><div class="story">'+body+'</div>'+opts+B("結束交談","closeModal()")+'</div></div>'}
 window.choiceTalk=function(id,c){s.relations[id]=(s.relations[id]||0)+1;
 if(id==="lin"&&c==="learn"){if(s.relations.lin>=3&&s.knownTechs.indexOf("寒泉劍訣")<0){s.knownTechs.push("寒泉劍訣");toast("林清霜傳你《寒泉劍訣》")}else toast("她指出你劍招中的三處破綻")}
@@ -165,6 +223,18 @@ if(id==="merchant"&&c==="buy"){market()}
 if(id==="merchant"&&c==="rumor"){s.flags.secret=true;toast("斷碑古域最近有人見到古修洞府")}
 if(id==="sword"&&c==="observe"){if(s.relations.sword>=3&&s.knownTechs.indexOf("太虛劍典・殘頁")<0){s.knownTechs.push("太虛劍典・殘頁");toast("你記下了一縷太虛劍意")}else toast("劍意太深，你只看懂一絲")}
 if(id==="inner"&&c==="guide"){s.qi+=25;toast("修為 +25")}
+if(id==="qiao"&&c==="risk"){s.contrib+=4;hist("記下了一件高危委託。");toast("獲得高危任務線索")}
+if(id==="mu"&&c==="herb"){s.inv.靈草+=1;toast("獲得靈草 ×1")}
+if(id==="mu"&&c==="work"){s.contrib+=3;toast("宗門貢獻 +3")}
+if(id==="yu"&&c==="lake"){s.luck+=1;toast("氣運 +1")}
+if(id==="yu"&&c==="sit"){s.qi+=8;toast("心境平復，修為 +8")}
+if(id==="mo"&&c==="gear"){toast("莫掌櫃：真正好貨要等拍賣會。")}
+if(id==="ning"&&c==="grave"){s.flags.secret=true;toast("獲得古宗葬地情報")}
+if(id==="ning"&&c==="sea"){toast("得知雲海港與靈潮島航線")}
+if(id==="sha"&&c==="hunt"){s.inv.獸骨+=1;toast("獸骨 +1")}
+if(id==="lei"&&c==="teach"&&s.knownTechs.indexOf("紫霄雷法")<0){if(s.contrib>=70){s.contrib-=70;s.knownTechs.push("紫霄雷法");toast("習得《紫霄雷法》")}else toast("需要 70 宗門貢獻")}
+if(id==="xue"&&c==="teach"&&s.knownTechs.indexOf("玄冰封脈術")<0){if(s.contrib>=65){s.contrib-=65;s.knownTechs.push("玄冰封脈術");toast("習得《玄冰封脈術》")}else toast("需要 65 宗門貢獻")}
+if(id==="ghost"&&c==="legacy"&&s.knownTechs.indexOf("無相遁法")<0){if(s.relations.ghost>=3){s.knownTechs.push("無相遁法");toast("獲得《無相遁法》殘篇")}else toast("殘魂道人尚未完全信任你")}
 hist("與 "+id+" 交談。");save();talk(id)}
 window.closeModal=function(){document.getElementById("modal").innerHTML="";render()}
 window.mission=function(){var r=Math.random();if(r<.33){s.contrib+=10;s.stones+=35;hist("護送靈藥車隊，獲貢獻10。");toast("任務完成")}else if(r<.66){s.contrib+=8;s.inv.靈草+=3;hist("整理靈田，獲貢獻8。");toast("獲得靈草")}else{hist("接下萬獸林獵妖任務。");toast("去萬獸林斬妖")};render()}
@@ -177,11 +247,11 @@ window.breakthrough=function(){if(s.qi<need()){toast("修為尚未圓滿");retur
 var AFFIXES=[
 {name:"攻擊",key:"atk",min:3,max:12,suffix:""}, {name:"防禦",key:"def",min:2,max:9,suffix:""}, {name:"氣血",key:"hp",min:20,max:90,suffix:""},
 {name:"靈力",key:"mp",min:15,max:65,suffix:""}, {name:"暴擊率",key:"crit",min:2,max:7,suffix:"%"}, {name:"閃避率",key:"dodge",min:2,max:6,suffix:"%"},
-{name:"劍法傷害",key:"sword",min:5,max:16,suffix:"%"}, {name:"火系傷害",key:"fire",min:5,max:16,suffix:"%"}, {name:"修煉效率",key:"cult",min:2,max:8,suffix:"%"}
+{name:"劍法傷害",key:"sword",min:5,max:16,suffix:"%"}, {name:"火系傷害",key:"fire",min:5,max:16,suffix:"%"}, {name:"修煉效率",key:"cult",min:2,max:8,suffix:"%"}, {name:"雷系傷害",key:"thunder",min:5,max:16,suffix:"%"}, {name:"冰系傷害",key:"ice",min:5,max:16,suffix:"%"}, {name:"生命恢復",key:"regen",min:2,max:8,suffix:"%"}, {name:"靈石掉落",key:"stoneDrop",min:3,max:12,suffix:"%"}, {name:"妖獸傷害",key:"beast",min:4,max:14,suffix:"%"}
 ];
-var WEAPONS=["青竹劍","玄鐵劍","流雲劍","赤炎刀","破山刀","寒月槍","鎮岳棍","靈木法杖","青羽扇","雷紋指套","獸骨長弓"];
-var ARMORS=["青紋道袍","玄鐵內甲","流雲法衣","赤炎戰袍","寒泉護甲","獸皮戰衣","靈木護身衣"];
-var ACCESSORIES=["青玉佩","聚靈戒","凝神珠","赤火墜","寒泉玉","獸魂環"];
+var WEAPONS=["青竹劍","玄鐵劍","流雲劍","赤炎刀","破山刀","寒月槍","鎮岳棍","靈木法杖","青羽扇","雷紋指套","獸骨長弓","寒星劍","赤霞劍","斷浪刀","血紋刀","驚雷槍","盤龍棍","玄冰法杖","紫火法印","追星弓","破邪扇","重山拳套","海潮珠杖","荒骨戰矛","古銅飛劍"];
+var ARMORS=["青紋道袍","玄鐵內甲","流雲法衣","赤炎戰袍","寒泉護甲","獸皮戰衣","靈木護身衣","雷紋法袍","厚土重甲","星紗道衣","黑水護衣","鎮魔戰甲","古宗祭袍","海獸鱗甲","赤砂輕甲"];
+var ACCESSORIES=["青玉佩","聚靈戒","凝神珠","赤火墜","寒泉玉","獸魂環","雷心石","星河墜","藏風戒","黑水珠","鎮魔符","古宗令牌","靈潮貝","赤砂骨牌","回靈玉環"];
 function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function makeGear(slot,bonus){var rar=Math.min(5,Math.max(1,(bonus||1)+(Math.random()<.2?1:0)+(Math.random()<.06?1:0)));var names=slot==="weapon"?WEAPONS:slot==="armor"?ARMORS:ACCESSORIES;var g={name:names[rand(0,names.length-1)],slot:slot,rarity:rar,base:{},affixes:[]};if(slot==="weapon")g.base.atk=rand(5,10)+rar*5;if(slot==="armor")g.base.def=rand(3,7)+rar*4;if(slot==="accessory")g.base.hp=20+rar*18;var count=Math.min(5,Math.max(0,rar-1));for(var i=0;i<count;i++){var p=AFFIXES[rand(0,AFFIXES.length-1)],v=rand(p.min,p.max)+rar;g.affixes.push({name:p.name,key:p.key,value:v,suffix:p.suffix})}return g}
 function gearStats(g){var o={atk:0,def:0,hp:0,mp:0,crit:0,dodge:0};if(!g)return o;for(var k in g.base)if(typeof o[k]!=="undefined")o[k]+=g.base[k];for(var i=0;i<g.affixes.length;i++){var a=g.affixes[i];if(typeof o[a.key]!=="undefined")o[a.key]+=a.value}return o}
