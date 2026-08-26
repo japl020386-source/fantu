@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0c">
-<title>凡途 Alpha 0.7.2｜對話深化</title>
+<title>凡途 Alpha 0.7.3｜人物直連修正版</title>
 <style>
 :root{--bg:#090b0c;--panel:#151612ef;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2;--purple:#c59ce2}
 *{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
@@ -40,7 +40,7 @@ window.addEventListener("error",function(e){
 </script>
 </head><body>
 <div id="scene"></div><div id="shade"></div>
-<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.7.2・對話深化</span></header><section id="view"></section></main>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.7.3・人物直連修正版</span></header><section id="view"></section></main>
 <div id="toast"></div><div id="modal"></div>
 <nav><div>
 <button data-action="goPage('world')"><b>山</b>世界</button><button data-action="goPage('people')"><b>人</b>人物</button><button data-action="goPage('cultivate')"><b>☯</b>修行</button>
@@ -407,14 +407,14 @@ function nextNpcText(id){if(!s.talkCount)s.talkCount={};var arr=NOVEL_DIALOGUE[i
 function maybeFate(id){if(!NOVEL_DIALOGUE[id]||!NOVEL_DIALOGUE[id].fate)return "";if(!s.fateSeen)s.fateSeen={};if(s.fateSeen[id])return "";var n=s.talkCount[id]||0,rel=s.relations[id]||0;if(n<3||rel<1)return "";var chance=Math.min(.55,.18+rel*.08+s.luck*.015);if(Math.random()>chance)return "";s.fateSeen[id]=true;if(id==="lin"||id==="zhao"||id==="sword"||id==="inner")s.qi+=20;if(id==="dan")s.inv.回春丹=(s.inv.回春丹||0)+1;if(id==="tie")s.inv.洗鍊石=(s.inv.洗鍊石||0)+1;if(id==="merchant")s.stones+=66;if(id==="han")s.flags.secret=true;hist("【人物機緣】"+NOVEL_DIALOGUE[id].fate.replace(/\n/g," "));return "\n\n──── 人物機緣 ────\n"+NOVEL_DIALOGUE[id].fate;}
 function storyOptions(id){
  var out="",choices=NOVEL_DIALOGUE[id]?NOVEL_DIALOGUE[id].choices:(NPC_BRANCHES[id]||[]);
- for(var i=0;i<choices.length;i++){var c=choices[i];out+=B(c[0],"storyChoice('"+id+"','"+c[2]+"')")}
- if(!choices.length)out+=B("再聊一會","talk('"+id+"')");
+ for(var i=0;i<choices.length;i++){var c=choices[i];out+='<button type="button" class="btn npc-choice" data-npc="'+escAttr(id)+'" data-choice="'+escAttr(c[2])+'">'+c[0]+'</button>'}
+ if(!choices.length)out+='<button type="button" class="btn npc-talk" data-npc="'+escAttr(id)+'">再聊一會</button>';
  return out;
 }
 
-function people(){var arr=NPCS[s.loc]||[],out="";if(!arr.length)out='<div class="story">此地暫無重要人物。四處走走，也許會遇見新的因果。</div>';for(var i=0;i<arr.length;i++){var n=arr[i];out+='<div class="item"><b>'+n.name+'</b> <span class="tag">'+n.title+'</span><br><small>'+n.desc+'</small><br><small>好感：'+(s.relations[n.id]||0)+'</small>'+B("交談","talk(\''+n.id+'\')")+'</div>'}return '<div class="panel"><div class="title">附近人物</div>'+out+'</div>'}
+function people(){var arr=NPCS[s.loc]||[],out="";if(!arr.length)out='<div class="story">此地暫無重要人物。四處走走，也許會遇見新的因果。</div>';for(var i=0;i<arr.length;i++){var n=arr[i];out+='<div class="item"><b>'+n.name+'</b> <span class="tag">'+n.title+'</span><br><small>'+n.desc+'</small><br><small>好感：'+(s.relations[n.id]||0)+'</small><button type="button" class="btn npc-talk" data-npc="'+escAttr(n.id)+'">交談</button></div>'}return '<div class="panel"><div class="title">附近人物</div>'+out+'</div>'}
 window.talk=function(id){var name=npcName(id);var body=nextNpcText(id);s.relations[id]=(s.relations[id]||0)+1;body+=maybeFate(id);save();document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+name+'</div><div class="story">'+body+'</div>'+storyOptions(id)+B("先告辭","closeModal()")+'</div></div>';};
-window.storyChoice=function(id,key){var e=STORY_CHOICE[key];if(!e){toast("這段對話尚未開放");return}s.relations[id]=(s.relations[id]||0)+(e.rel||1);if(e.qi)s.qi+=e.qi;if(e.contrib)s.contrib+=e.contrib;if(e.stones)s.stones+=e.stones;if(e.luck)s.luck+=e.luck;if(e.flag)s.storyFlags[e.flag]=true;if(e.item)s.inv[e.item]=(s.inv[e.item]||0)+(e.count||1);hist("與"+npcName(id)+"的一次交談改變了某些事情。");save();document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+npcName(id)+'</div><div class="story">'+e.reply+'</div>'+B("繼續聊","talk('"+id+"')","blue")+B("記下這件事，告辭","closeModal()")+'</div></div>';};
+window.storyChoice=function(id,key){var e=STORY_CHOICE[key];if(!e){toast("這段對話尚未開放");return}s.relations[id]=(s.relations[id]||0)+(e.rel||1);if(e.qi)s.qi+=e.qi;if(e.contrib)s.contrib+=e.contrib;if(e.stones)s.stones+=e.stones;if(e.luck)s.luck+=e.luck;if(e.flag)s.storyFlags[e.flag]=true;if(e.item)s.inv[e.item]=(s.inv[e.item]||0)+(e.count||1);hist("與"+npcName(id)+"的一次交談改變了某些事情。");save();document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+npcName(id)+'</div><div class="story">'+e.reply+'</div><button type="button" class="btn blue npc-talk" data-npc="'+escAttr(id)+'">繼續聊</button>'+B("記下這件事，告辭","closeModal()")+'</div></div>';};
 window.closeModal=function(){document.getElementById("modal").innerHTML="";render()}
 window.mission=function(){var r=Math.random();if(r<.33){s.contrib+=10;s.stones+=35;hist("護送靈藥車隊，獲貢獻10。");toast("任務完成")}else if(r<.66){s.contrib+=8;s.inv.靈草+=3;hist("整理靈田，獲貢獻8。");toast("獲得靈草")}else{hist("接下萬獸林獵妖任務。");toast("去萬獸林斬妖")};render()}
 window.showTechs=function(){var out="";for(var k in TECHS){var t=TECHS[k],known=s.knownTechs.indexOf(k)>=0;out+='<div class="item"><b class="r'+Math.min(5,t.tier)+'">'+k+'</b> <span class="tag">'+t.type+'</span><br><small>'+t.desc+'</small><span class="aff">'+t.bonus+'</span>'+(known?'<div class="tag">已習得</div>':(t.cost>0?'<button type="button" class="btn learn-tech" data-tech="'+escAttr(k)+'">用貢獻換取（'+t.cost+'）</button>':'<div class="tag">特殊機緣</div>'))+'</div>'}document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="title">藏經閣・功法目錄</div><div class="subtitle">目前宗門貢獻：'+s.contrib+'</div>'+out+B("離開","closeModal()")+'</div></div>'}
@@ -550,6 +550,10 @@ function runAction(code){
   toast("按鈕指令錯誤");
 }
 document.addEventListener("click",function(ev){
+  var npcBtn=ev.target.closest ? ev.target.closest(".npc-talk") : null;
+  if(npcBtn){ev.preventDefault();window.talk(npcBtn.getAttribute("data-npc"));return}
+  var choiceBtn=ev.target.closest ? ev.target.closest(".npc-choice") : null;
+  if(choiceBtn){ev.preventDefault();window.storyChoice(choiceBtn.getAttribute("data-npc"),choiceBtn.getAttribute("data-choice"));return}
   var techBtn=ev.target.closest ? ev.target.closest("[data-tech]") : null;
   if(techBtn){ev.preventDefault();window.learnTech(techBtn.getAttribute("data-tech"));return}
   var disBtn=ev.target.closest ? ev.target.closest(".dismantle-gear") : null;
