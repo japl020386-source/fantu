@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b0c">
-<title>凡途 Alpha 0.6｜青州擴張</title>
+<title>凡途 Alpha 0.7｜人間有情</title>
 <style>
 :root{--bg:#090b0c;--panel:#151612ef;--gold:#dfbf72;--text:#f0eadc;--muted:#a39c8d;--line:#554a31;--green:#8fb38d;--red:#c67464;--blue:#8aa9c2;--purple:#c59ce2}
 *{box-sizing:border-box}body{margin:0;background:#090b0c;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Serif TC",serif}
@@ -40,7 +40,7 @@ window.addEventListener("error",function(e){
 </script>
 </head><body>
 <div id="scene"></div><div id="shade"></div>
-<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.6・青州擴張</span></header><section id="view"></section></main>
+<main id="app"><header><h1>凡途</h1><span class="ver">ALPHA 0.7・人間有情</span></header><section id="view"></section></main>
 <div id="toast"></div><div id="modal"></div>
 <nav><div>
 <button data-action="goPage('world')"><b>山</b>世界</button><button data-action="goPage('people')"><b>人</b>人物</button><button data-action="goPage('cultivate')"><b>☯</b>修行</button>
@@ -53,7 +53,8 @@ var SCENES={
 village:{name:"青雲村",desc:"炊煙沿著青石屋瓦升起。凡人只談柴米，少有人相信世上真有長生。",bg:"radial-gradient(circle at 50% 18%,#80633d,#2c281f 44%,#0b0d0d)",to:["gate","river","ancientCity"]},
 river:{name:"落霞河",desc:"河水穿過青州平原，偶爾有散修沿河尋找靈砂。",bg:"radial-gradient(circle at 50% 15%,#4f7480,#27363a 45%,#090b0b)",to:["village","market"]},
 gate:{name:"青玄宗・山門",desc:"千級石階沒入雲海，青玄二字刻在百丈山壁之上。",bg:"radial-gradient(circle at 50% 10%,#66808a,#263b3d 40%,#0b0d0d)",to:["village","outer","market"]},
-outer:{name:"青玄宗・外門",desc:"晨鐘迴盪。數百外門弟子在山腰洞府間來往。",bg:"radial-gradient(circle at 40% 10%,#526c58,#26372c 42%,#0b0d0d)",to:["gate","mission","library","dan","forge","field","arena","mountain"]},
+outer:{name:"青玄宗・外門",desc:"晨鐘迴盪。數百外門弟子在山腰洞府間來往。",bg:"radial-gradient(circle at 40% 10%,#526c58,#26372c 42%,#0b0d0d)",to:["gate","cave","mission","library","dan","forge","field","arena","mountain"]},
+cave:{name:"弟子洞府",desc:"一扇不起眼的石門，門後卻是你在青玄宗真正能放下戒心的地方。蒲團旁堆著未讀完的玉簡，聚靈陣中央還留著上次閉關時的靈氣餘韻。",bg:"radial-gradient(circle at 50% 12%,#66583e,#302a21 48%,#090a09)",to:["outer"]},
 mission:{name:"任務堂",desc:"玉璧上懸著數百道任務。有人求穩，有人以命換前程。",bg:"radial-gradient(circle at 45% 12%,#6a6248,#302d22 43%,#0b0d0d)",to:["outer"]},
 library:{name:"藏經閣",desc:"木樓七層，玉簡如星。越往上，功法越強，代價也越高。",bg:"radial-gradient(circle at 50% 15%,#765d36,#30291e 45%,#0b0d0d)",to:["outer"]},
 dan:{name:"丹峰",desc:"藥香與丹火終年不散，偶爾也傳來炸爐巨響。",bg:"radial-gradient(circle at 50% 15%,#70422c,#33221c 45%,#0b0d0d)",to:["outer"]},
@@ -144,7 +145,7 @@ sectGrave:[{id:"ghost",name:"殘魂道人",title:"古宗殘魂",desc:"只剩一�
 var D={realm:0,layer:0,qi:0,stones:150,age:16,lifespan:80,root:"未測",luck:0,karma:0,hp:100,maxhp:100,mp:70,maxmp:70,atk:12,def:5,crit:5,dodge:2,stage:"intro",loc:"village",tech:"青玄吐納訣",skills:["御氣斬"],knownTechs:["青玄吐納訣","御氣斬"],contrib:0,passXP:0,lastClaim:"",kills:0,
 inv:{靈草:0,妖丹:0,玄鐵:0,靈木:0,赤炎晶:0,寒鐵:0,雷紋石:0,獸骨:0,築基丹:0,回春丹:1,悟道殘頁:0,洗鍊石:0},
 gear:{weapon:{name:"木劍",slot:"weapon",rarity:1,base:{atk:2},affixes:[]},armor:{name:"粗布衣",slot:"armor",rarity:1,base:{def:1},affixes:[]},accessory:null,artifact:null},
-gearBag:[],recipes:{築基丹:false,回春丹:true},history:[],relations:{lin:0,han:0,old:0,dan:0,tie:0,merchant:0,zhao:0,sword:0,inner:0,qiao:0,mu:0,yu:0,mo:0,ning:0,sha:0,hai:0,lei:0,xue:0,ghost:0},flags:{elder:false,five:false,inner:false,secret:false},lastSeen:Date.now()};
+gearBag:[],recipes:{築基丹:false,回春丹:true},history:[],talkCount:{},storyFlags:{},fateSeen:{},relations:{lin:0,han:0,old:0,dan:0,tie:0,merchant:0,zhao:0,sword:0,inner:0,qiao:0,mu:0,yu:0,mo:0,ning:0,sha:0,hai:0,lei:0,xue:0,ghost:0},flags:{elder:false,five:false,inner:false,secret:false},lastSeen:Date.now()};
 window.page="world";
 function clone(x){return JSON.parse(JSON.stringify(x))}
 function merge(a,b){for(var k in b){if(typeof a[k]==="undefined"){a[k]=clone(b[k]);continue}if(b[k]!==null&&typeof b[k]==="object"&&!Array.isArray(b[k])){if(a[k]===null||typeof a[k]!=="object")a[k]=clone(b[k]);else merge(a[k],b[k])}}}
@@ -185,62 +186,174 @@ function unlocked(loc){
   if(["spiritIsland"].indexOf(loc)>=0)return s.realm>=3;
   return true
 }
-function world(){if(!SCENES[s.loc])s.loc="gate";var sc=SCENES[s.loc]||SCENES.gate,nodes="",tos=(sc&&sc.to)||[];for(var i=0;i<tos.length;i++){var x=tos[i],lk=!unlocked(x);nodes+='<div class="mapnode '+(lk?'lock':'')+'"><b>'+SCENES[x].name+'</b><br><small>'+SCENES[x].desc.slice(0,36)+'…</small>'+(lk?'<div class="tag">境界不足</div>':'<button type="button" class="btn travel-direct" data-dest="'+x+'">前往</button>')+'</div>'}var acts="";if(["mountain","beastForest","ruins","secret","river","spiritLake","swordValley"].indexOf(s.loc)>=0)acts+=B("探索此地","explore()","danger");if(s.loc==="mission")acts+=B("領取宗門任務","mission()");if(s.loc==="library")acts+=B("查看功法目錄","showTechs()","blue");if(s.loc==="arena")acts+=B("尋人切磋","battle(1)","danger");if(s.loc==="market")acts+=B("逛坊市攤位","market()");return '<div class="panel"><div class="location">'+sc.name+'</div><div class="weather">☁ 靈氣濃度：'+(s.loc==="secret"?"濃郁":s.loc==="inner"?"上佳":"尋常")+'</div><div class="story">'+sc.desc+'</div></div><div class="panel"><div class="title">附近地點</div>'+nodes+'</div>'+(acts?'<div class="panel"><div class="title">此地行動</div>'+acts+'</div>':"")}
+function world(){if(!SCENES[s.loc])s.loc="gate";var sc=SCENES[s.loc]||SCENES.gate,nodes="",tos=(sc&&sc.to)||[];for(var i=0;i<tos.length;i++){var x=tos[i],lk=!unlocked(x);nodes+='<div class="mapnode '+(lk?'lock':'')+'"><b>'+SCENES[x].name+'</b><br><small>'+SCENES[x].desc.slice(0,36)+'…</small>'+(lk?'<div class="tag">境界不足</div>':'<button type="button" class="btn travel-direct" data-dest="'+x+'">前往</button>')+'</div>'}var acts="";if(["mountain","beastForest","ruins","secret","river","spiritLake","swordValley"].indexOf(s.loc)>=0)acts+=B("探索此地","explore()","danger");if(s.loc==="mission")acts+=B("領取宗門任務","mission()");if(s.loc==="library")acts+=B("查看功法目錄","showTechs()","blue");if(s.loc==="arena")acts+=B("尋人切磋","battle(1)","danger");if(s.loc==="market")acts+=B("逛坊市攤位","market()");var sectArea=["gate","outer","cave","mission","library","dan","forge","field","arena","inner","peak","starTerrace","thunderPeak"];if(sectArea.indexOf(s.loc)<0)acts+=B("踏上歸途・返回青玄宗","returnSect()","good");if(s.loc==="gate"||s.loc==="outer")acts+=B("回自己的弟子洞府","move('cave')","good");if(s.loc==="cave"){acts+=B("休養三日・療傷養神","restAtSect()","good");acts+=B("閉關七日・運轉周天","shortRetreat()","blue");acts+=B("整理洞府・查看歸宗札記","homeJournal()");}return '<div class="panel"><div class="location">'+sc.name+'</div><div class="weather">☁ 靈氣濃度：'+(s.loc==="secret"?"濃郁":s.loc==="inner"?"上佳":"尋常")+'</div><div class="story">'+sc.desc+'</div></div><div class="panel"><div class="title">附近地點</div>'+nodes+'</div>'+(acts?'<div class="panel"><div class="title">此地行動</div>'+acts+'</div>':"")}
 window.move=function(x){if(!SCENES[x]){toast("地點資料錯誤");return}if(!unlocked(x)){toast("境界不足");return}document.getElementById("scene").style.opacity=.15;setTimeout(function(){s.loc=x;save();document.getElementById("scene").style.opacity=1;render()},180)}
+
+var NOVEL_DIALOGUE={
+lin:{
+ lines:[
+ "林清霜正站在崖邊收劍。最後一式落下時，劍尖沒有半點顫動。\n\n她看了你一眼，又看向你腰間那柄木劍。\n\n「新弟子？」\n\n她頓了一下。\n\n「那就先記住一件事。西側山道入夜後別走。不是因為妖獸。」",
+ "你來時，林清霜正用兩根手指夾著一片落葉。\n\n劍光一閃，葉子仍完整，只是中央多出一道細得幾乎看不見的白線。\n\n「昨日你問我什麼叫劍快。」她把葉子遞給你，「今天我改答案。快不難，難的是劍到了，心還沒亂。」",
+ "演武台方向傳來一陣喧嘩。林清霜沒有回頭，只把劍穗重新繫緊。\n\n「外門小比有人在故意藏招。」\n\n她語氣平淡，像是在說天氣。\n\n「若你也要參加，別只看對手用什麼劍。看他第一步踩哪裡。」"
+ ],
+ choices:[
+  ["追問西側山道發生過什麼","你問得直接。林清霜沉默片刻，才說：「三年前，有七個弟子走那條路，只回來六個。第七個人的命牌卻一直沒碎。」\n\n她看向遠處山霧。\n\n「所以我說，那裡麻煩的不是妖獸。」","lin_route"],
+  ["請她指出自己的劍招問題","她讓你拔劍。\n\n你才起手，她便用劍鞘敲了敲你的右肩。\n\n「這裡先動了。」\n\n第二次，又敲在左膝。\n\n「這裡想退。」\n\n第三次她沒有出手，只淡淡道：「你不是劍慢，是每一招都在先問自己會不會輸。」","lin_sword"]
+ ],
+ fate:"林清霜轉身前忽然將一枚薄薄的竹片拋給你。上面只有一道劍痕。\n\n「看懂再來找我。」\n\n你盯著那道劍痕許久，竟覺得體內靈氣跟著它的走勢自行運轉了一周天。"
+},
+han:{
+ lines:[
+ "韓執事面前堆著一尺高的任務玉簡。他手上不停，嘴上也不停。\n\n「左邊穩，右邊快，中間那堆能死人。」\n\n他終於抬頭看你。\n\n「你想賺靈石，賺貢獻，還是賺一個後悔？」",
+ "你剛走進任務堂，韓執事便把一枚玉簡反扣在桌上。\n\n「這件不給你。」\n\n你還沒開口，他已經笑了。\n\n「別用那種眼神看我。昨天接它的人現在還沒回來，我只是懶得再寫一張失蹤登記。」",
+ "韓執事今日沒有笑。\n\n他把門外幾個弟子趕遠一些，才壓低聲音。\n\n「後山少了兩隊巡山弟子。命牌沒碎，人也沒回。」\n\n「這件事，出了這扇門就當你沒聽過。」"
+ ],
+ choices:[
+  ["問那堆『能死人』的任務","韓執事把手按在那堆玉簡上。\n\n「你有膽，不代表我有空替你收屍。」\n\n他抽出最下面一枚灰色玉簡。\n\n「真想試，就先替我查一件小事：萬獸林最近的妖獸，為什麼都在往南跑。」","han_danger"],
+  ["接一件最普通的宗門雜務","他很乾脆地丟來一塊木牌。\n\n「靈田缺人挑水。無聊、累、沒機緣。」\n\n見你接過，他反而笑了。\n\n「但能活著做完。修仙這件事，先活著才有後面的故事。」","han_safe"]
+ ],
+ fate:"你準備離開時，韓執事忽然叫住你。\n\n「等等。」\n\n他從抽屜深處摸出一張舊地圖，把其中一條山徑用指甲劃掉。\n\n「若真進萬獸林，別走這裡。去年起，走這條路的人都說自己聽見有人在背後叫名字。」"
+},
+old:{
+ lines:[
+ "守閣老人仍坐在那張快散架的竹椅上。\n\n你走近時，他連眼皮都沒抬。\n\n「腳步比上次重。」\n\n你一愣。\n\n「別看我。不是你胖了，是心裡裝的東西多了。」",
+ "老人今日拿著一本沒有書名的破冊子。\n\n「世上人人都想找最強的功法。」\n\n他翻過一頁。\n\n「奇怪的是，死在半路上的人，十個有九個不是功法不夠強，是路選得太多。」",
+ "藏經閣外下著雨。守閣老人忽然問你：「若大道與一個你欠了命的人，只能留一個，你留誰？」\n\n你還沒回答，他便搖頭。\n\n「別急。現在回答的都不算。等真到那一天，你才知道自己是什麼人。」"
+ ],
+ choices:[
+  ["問他為何總能看出自己的狀態","老人終於抬眼。\n\n「看你？」\n\n他笑了一聲。\n\n「我看的是你腳下那點灰。心亂的人走路重，受傷的人落腳偏，剛拿到好處的人進門時會忍不住摸儲物袋。」\n\n「修仙久了，神通反而沒那麼重要。」","old_eye"],
+  ["把最近的修行困惑告訴他","老人聽完沒有回答，只把桌上一杯已冷的茶推給你。\n\n「喝。」\n\n你皺眉喝了一口，苦得發澀。\n\n「記住這個味道。你現在的問題不是功法，是太急著讓每一天都有進步。」","old_mind"]
+ ],
+ fate:"老人從桌底摸出一張邊角焦黑的殘頁，只讓你看了三息便收回。\n\n三息之間，你只記住一句：『氣行五藏，不爭一時。』\n\n可當你離開藏經閣，那一句話仍在識海中反覆迴盪。"
+},
+dan:{
+ lines:[
+ "丹辰子正拿著一勺黑乎乎的藥渣聞。\n\n你剛靠近，他立刻把勺子遞過來。\n\n「聞。」\n\n你下意識後退半步。\n\n他翻了個白眼：「放心，死不了。真會死的我不會浪費在你身上。」",
+ "丹爐裡忽然傳來一聲悶響。\n\n丹辰子面無表情地打開爐蓋，一股黑煙直衝屋頂。\n\n「第三十七次。」\n\n你問他什麼第三十七次。\n\n「證明這三味藥真的不能一起煉的第三十七次。」",
+ "丹辰子今日難得沒有炸爐。\n\n他捏著一顆淡青丹丸看了半天，最後卻把它碾碎。\n\n「成丹了，藥性也對。」\n\n「那為什麼毀掉？」\n\n「因為我知道它還能更好。煉丹最怕的不是失敗，是習慣『差不多』。」"
+ ],
+ choices:[
+  ["請他教你分辨一爐丹是否要失敗","丹辰子指了指火。\n\n「別看火色，先聽聲音。」\n\n你屏息半天，只聽見木柴爆裂。\n\n他嘆氣：「所以先從燒水開始吧。你離炸出一座新丹峰還有點近。」","dan_listen"],
+  ["問築基丹到底難在哪裡","他的笑意收了一點。\n\n「不是材料。」\n\n「築基丹真正難的是最後三息。藥力要推開丹田，又不能替人把路走完。多一分傷根，少一分沒用。」\n\n「所以別把築基丹當鑰匙。它只是有人在你背後推一掌。」","dan_found"]
+ ],
+ fate:"丹辰子把一顆成色普通的回春丹彈進你掌心。\n\n「這顆藥力差半成，拿去吧。」\n\n你正要道謝，他已轉身去看丹爐。\n\n「別誤會。只是懶得重新入庫。」"
+},
+tie:{
+ lines:[
+ "器峰火浪撲面。鐵山赤著上身，一錘一錘砸在燒紅的劍胚上。\n\n直到第七錘落下，他才開口。\n\n「你手上那把木劍，扔了吧。」\n\n你低頭看了一眼。\n\n「別捨不得。感情不能加攻擊。」",
+ "鐵山把一塊玄鐵丟給你。\n\n你差點沒接住。\n\n「重嗎？」\n\n你點頭。\n\n「同樣一塊鐵，有人煉成劍，有人煉成鍋。材料只決定下限，人決定上限。」",
+ "一柄剛出爐的長刀忽然自行顫鳴。\n\n旁邊弟子滿臉喜色，鐵山卻一錘把刀背敲彎。\n\n「靈性太躁。」\n\n他看向錯愕的弟子。\n\n「會叫的不一定是好器。快死的豬也會叫。」"
+ ],
+ choices:[
+  ["問詞條到底是怎麼來的","鐵山用火鉗夾起一塊器胚。\n\n「你們愛叫詞條，我們叫器紋。」\n\n「材料性子、火候、錘法、主人留下的靈氣，全會刻進去。」\n\n他瞥你一眼。\n\n「所以別問怎麼洗出好詞條。先問你配不配讓一件器記住你。」","tie_affix"],
+  ["問世上真的有會認主的神兵嗎","鐵山沉默了一會。\n\n「有。」\n\n這是他第一次沒有嘲笑你。\n\n「但認主不是它喜歡你。很多時候，是它看中了你能替它做什麼。」","tie_divine"]
+ ],
+ fate:"你轉身時，鐵山把一顆灰白石頭踢到你腳邊。\n\n「廢爐裡拆的。拿去洗器紋。」\n\n你撿起才發現，是一顆完整的洗鍊石。"
+},
+merchant:{
+ lines:[
+ "蘇九娘今日換了支金簪。見你進門，她先看你的鞋，再看你的袖口，最後才看臉。\n\n「沒受傷，沒發財，也沒被人追。」\n\n她笑吟吟地倒茶。\n\n「那你今天來，大概只是想問些不值錢的問題。」",
+ "坊市人聲正盛。蘇九娘卻把門簾放下一半。\n\n「昨晚天河古城有人拿出一柄古劍。」\n\n「很強？」\n\n「不知道。」她笑了，「但劍一出鞘，整座拍賣樓的劍都在抖。光這件事，就足夠讓一群有錢人失去理智。」",
+ "蘇九娘正撥算盤。\n\n「靈草漲兩成，玄鐵跌半成，回春丹有人掃貨。」\n\n她忽然停手。\n\n「市場從來不會自己發瘋。有人急著買療傷丹，就代表有人知道最近會有人受傷。」"
+ ],
+ choices:[
+  ["問她哪一種消息最值錢","她伸出三根手指。\n\n「第一，別人還不知道的。第二，別人知道但不敢說的。第三——你知道以後還能活著用上的。」","merchant_info"],
+  ["請她教你怎麼在坊市不被坑","蘇九娘笑得很開心。\n\n「第一課：別相信教你怎麼不被坑的人。」\n\n見你臉色一僵，她才補了一句：「第二課，買之前先問自己，若今天不買，三天後會不會死。若不會，先走一圈。」","merchant_shop"]
+ ],
+ fate:"蘇九娘叫住你，從櫃底拋來一小袋靈石。\n\n「上次那批材料我算錯價了。」\n\n你狐疑地看她。\n\n她挑眉：「怎麼，我偶爾做一次良心生意，你還不敢收？」"
+},
+zhao:{
+ lines:[
+ "趙無鋒正在演武台下纏護腕。\n\n看見你，他咧嘴一笑。\n\n「來得正好。」\n\n你還沒問什麼正好，他已經站起來。\n\n「昨天那拳我只用了七成。今天試八成。」",
+ "趙無鋒鼻青臉腫，心情卻很好。\n\n「輸了。」\n\n你看著他的臉，覺得這句多餘。\n\n「但我逼那個築基師兄用了第二招。」他笑得更開心，「以前他打一招就走。這就叫進步。」",
+ "他靠在石欄上看別人切磋。\n\n「你有沒有發現，外門最愛喊招式名的人通常最弱？」\n\n你問為什麼。\n\n「因為強的那群人，忙著看你哪裡會死，沒空喊。」"
+ ],
+ choices:[
+  ["跟他打一場，但只比三招","趙無鋒眼睛一亮。\n\n第一招，他搶中線；第二招，你故意退半步；第三招兩人的拳與劍鞘同時停在對方要害前。\n\n他沉默一下，笑了。\n\n「行。你不是只會閉關了。」","zhao_three"],
+  ["問他為什麼這麼愛打架","他想了很久。\n\n「小時候家裡窮，碰到事情只能忍。」\n\n趙無鋒低頭重新綁緊護腕。\n\n「後來能修仙了，我才發現有些事情可以不忍。所以我得確定，真到那天，我的拳頭夠不夠硬。」","zhao_reason"]
+ ],
+ fate:"趙無鋒忽然把你拉到一旁，示範一次極短的發力。\n\n「別只用手，從腳底開始。」\n\n你照著做了一次，體內靈氣竟順著脊背猛地一震，原本卡住的一處氣脈微微鬆開。"
+},
+sword:{
+ lines:[
+ "白衣劍客背對著你站在落劍谷中央。\n\n今天谷風向東，數百柄殘劍上的破布卻都往西飄。\n\n他問：「看見了嗎？」\n\n你不知道他問的是風，還是劍。",
+ "他用兩根手指從地上拔起一柄鏽到只剩半截的斷劍。\n\n「這把劍的主人當年很有名。」\n\n你問名字。\n\n「忘了。」\n\n他把劍插回土裡。\n\n「所以別太在意名聲。劍斷了以後，名字也就只比鐵鏽多活幾年。」",
+ "白衣劍客忽然問你：「若有一劍，你明知出手一定會輸，還出不出？」\n\n谷中沒有別的聲音。\n\n他沒有催你。\n\n像是真的願意等你想一輩子。"
+ ],
+ choices:[
+  ["若身後有人不能退，就出","他第一次轉過身正眼看你。\n\n「這答案很俗。」\n\n停了片刻，他卻又道：「但能真的做到的人，很少。」\n\n他抬手一指，一縷劍氣擦過你耳側，斬斷身後十丈外的一根枯枝。","sword_guard"],
+  ["明知必敗，就不該白白出劍","白衣劍客沒有露出失望。\n\n反而點了點頭。\n\n「活著，比漂亮地死難多了。」\n\n「記住你今天的答案。將來若你為了面子改口，我會看不起你。」","sword_live"]
+ ],
+ fate:"谷中忽然傳來一聲極輕的劍鳴。\n\n不是白衣劍客的劍。\n\n是你腳邊一柄早已鏽死的殘劍。\n\n它只響了一聲，卻讓你識海中多出一道無法用言語描述的劍痕。"
+},
+inner:{
+ lines:[
+ "顧長青正站在內門石橋上看雲。\n\n「外門弟子覺得進內門就輕鬆了。」\n\n他笑了一下。\n\n「其實只是以前大家搶一個月的資源，現在開始搶十年後的位置。」",
+ "顧長青手裡有兩封信，一封已拆，一封未拆。\n\n「宗門裡最難修的不是功法，是人情。」\n\n他把未拆的那封收進袖中。\n\n「有些信看了，就得選邊站。」",
+ "他打量你的氣息很久。\n\n「築基之後，你會第一次真正發現：路不是越多越好。」\n\n「劍、丹、器、體、術。每條都能走，但人的命只有一條。」"
+ ],
+ choices:[
+  ["問他當初怎麼選自己的路","顧長青沉默了片刻。\n\n「我沒選。」\n\n見你疑惑，他笑道：「當年有人替我選好了。我花了五年才把那條路走回自己的。」\n\n「所以我不會告訴你該走哪條。」","inner_path"],
+  ["問內門真正危險的是什麼","「欠。」\n\n他只說一個字。\n\n「欠長老一個人情，欠同門一次救命，欠家族一份資源。妖獸咬你一口就走，人情會跟你幾十年。」","inner_debt"]
+ ],
+ fate:"顧長青讓你盤膝坐下，只替你調整了一次呼吸節奏。\n\n短短半柱香，你原本略顯散亂的周天便穩了下來。\n\n「別謝我。下次我真要你幫忙時，你再決定要不要還。」"
+}
+};
+
+var NPC_SHORT={
+qiao:["喬遠山正在把一枚紅色任務玉簡藏進抽屜。\n\n「別看。那是給想死得快一點的人準備的。」","他在名冊上劃掉一個名字。\n\n「失蹤三天。命牌沒碎。這種最麻煩。」","喬遠山抬頭：「接任務先看誰發的，再看獎勵。順序別反。」"],
+mu:["木小禾托著一株嫩芽，像托著一件寶物。\n\n「昨天它還不肯抬頭。今天終於想活了。」","她把泥拍回根部。\n\n「千年靈藥也是從第一天長起來的。修士偏偏只愛最後一天。」","木小禾遞給你一片葉子。\n\n「咬一點。苦是正常，甜才代表有問題。」"],
+yu:["余晚舟的魚鉤上什麼都沒有。\n\n「今天魚不吃餌。湖底大概有東西醒了。」","他給你挪出半塊石頭。\n\n「坐。修仙人最缺的不是壽元，是敢浪費的半個時辰。」","余晚舟拉起魚線，上面只掛著一片青色鱗片。\n\n他看了一眼，又把鱗片丟回湖裡：「還不是時候。」"],
+mo:["莫掌櫃把一枚戒指放在燈下轉了半圈。\n\n「外面值三百，裡面的禁制值一千。可惜賣家只懂外面。」","他把一本拍賣冊推近一寸。\n\n「第三件拍品別急著出價。想要的人太多，第一輪都是演戲。」","莫掌櫃笑道：「最強裝備？你先告訴我你要拿它殺誰，我才知道什麼叫最強。」"],
+ning:["寧紅袖把窗關了一半。\n\n「今日城裡十條消息，三條是真的，四條是半真，剩下三條是有人花錢讓你相信。」","她在桌面畫出一個小圈。\n\n「古宗葬地最近多了陌生腳印。不是青州人的靴底。」","寧紅袖收起紙條：「情報不必永遠正確，只要比別人早半天，就能值命。」"],
+sha:["沙行客倒掉靴子裡的沙。\n\n「荒漠最公平。你是煉氣還是金丹，迷路久了都得死。」","他指向遠處熱浪：「昨天那裡有塔。今天沒有。明天可能又回來。」","沙行客摸了摸腰間三顆獸牙：「這三顆不賣。每一顆都替我擋過一次死。」"],
+hai:["海七拍著老舊船舷。\n\n「別嫌它醜。能從海霧裡回來的船，就是好船。」","他朝外海努嘴：「靈潮島今天在東南。明天？問海。」","海七壓低聲音：「海霧裡若看見第二個月亮，閉眼。別問我為什麼還知道。」"],
+lei:["雷千岳掌心炸開一縷雷光。\n\n「怕疼正常。怕完還敢站著，才適合學雷法。」","他抬頭看雷雲：「雷真正可怕的不是快，是落下前你知道自己無處可躲。」","雷千岳笑得震耳：「今日雲層夠低。好天氣。適合拿命換感悟。」"],
+xue:["雪無痕睜眼，睫毛上的霜一點點化去。\n\n「你腳步太重。洞裡的冰比我更早知道你來了。」","她指著冰壁中的氣泡：「千年前的一口風。別敲碎，會吵。」","雪無痕掌心凝出一片雪花：「看清它消失前的六條紋，比背一百遍口訣有用。」"],
+ghost:["殘魂道人望著斷裂的山門。\n\n「我們當年也覺得護宗大陣永遠不會破。」","他的手穿過石碑。\n\n「活人總想問傳承。死人只想知道，還有沒有人記得。」","殘魂道人低聲道：「覆滅我們的不是一個敵人，是三次明知不對卻沒人敢反對的選擇。」"]
+};
+
+var STORY_CHOICE={
+lin_route:{reply:"你追問那名失蹤弟子的名字。\n\n林清霜卻搖頭。\n\n「先別知道。名字會讓你好奇，好奇會讓你去找。」\n\n她看著你：「等你至少能在我手上撐十招，我再告訴你。」",rel:1},
+lin_sword:{reply:"她讓你重新起手七次。第七次，劍鞘沒有再敲下來。\n\n「勉強。」\n\n對林清霜而言，這兩個字大概已經算誇獎。",qi:12,rel:1},
+han_danger:{reply:"韓執事把灰色玉簡塞進你手裡，又立刻按住。\n\n「最後問一次。接了，就別指望我因為你年輕替你改難度。」\n\n你點頭後，他才鬆手。",contrib:3,flag:"beast_migration"},
+han_safe:{reply:"挑水比你想的更累。靈田的水不能用法術亂搬，只能沿陣紋一桶桶送。\n\n傍晚，韓執事看著你濕透的衣服，只說：「很好。至少你不是只會挑漂亮任務的人。」",contrib:5,stones:18},
+old_eye:{reply:"你忽然意識到，這老人可能從第一次見面起，就把你的每一個小動作都看在眼裡。\n\n他又低下頭：「別緊張。我若真想害你，你現在才開始緊張也晚了。」",rel:1},
+old_mind:{reply:"那杯冷茶的苦味一直留到你走出藏經閣。\n\n奇怪的是，你原本卡了數日的一處行氣節奏，反而在不再強求後自然順了。",qi:18},
+dan_listen:{reply:"你真的被留在丹房燒了一下午水。\n\n丹辰子最後只問：「沸騰前一息，聲音變了沒有？」\n\n這一次，你聽見了。",rel:1,flag:"hear_cauldron"},
+dan_found:{reply:"他在紙上畫了三個圈，又全部抹掉。\n\n「等你真到煉氣大圓滿，再來。我現在教太多，你只會把自己嚇得不敢築基。」",rel:1},
+tie_affix:{reply:"鐵山把兩把外形一模一樣的短劍丟在桌上。\n\n一把冰冷，一把握住時竟有微微暖意。\n\n「同樣材料，同一個爐。最後一錘，兩個器師心裡想的東西不同。」",item:"洗鍊石",count:1},
+tie_divine:{reply:"鐵山把爐門關上，火光在他臉上一閃。\n\n「我見過一柄劍，主人死後三百年都沒讓第二個人碰。」\n\n「浪漫嗎？」\n\n他冷笑：「也可能只是脾氣差。」",rel:1},
+merchant_info:{reply:"蘇九娘把三根手指全收回去。\n\n「還有第四種：你明明知道，卻願意假裝不知道的消息。那種通常最貴。」",luck:1},
+merchant_shop:{reply:"她把茶推到你面前。\n\n「第三課免費送你：同一件東西，若賣家一直催你今天決定，那真正怕錯過的人通常不是你，是他。」",stones:20},
+zhao_three:{reply:"三招結束後，趙無鋒大笑著拍你肩膀。\n\n「這才對。修為是你有多少力，打架是你知不知道什麼時候用。」",qi:15,rel:1},
+zhao_reason:{reply:"他說完後像覺得自己太正經，立刻咧嘴補了一句：「當然，能順便揍討厭的人也很好。」",rel:2},
+sword_guard:{reply:"白衣劍客轉回身。\n\n「下次別急著說給我聽。」\n\n「先問自己，身後那個人值不值得你死。」\n\n谷風重新吹動，你卻覺得這句比劍氣更冷。",qi:22,flag:"sword_guard"},
+sword_live:{reply:"他點頭。\n\n「修仙界太多人會教你怎麼死得像個英雄，很少有人教你怎麼活得不難看。」",luck:1,flag:"sword_live"},
+inner_path:{reply:"顧長青看向遠處。\n\n「別把別人的後悔當成你的答案。我的路走錯過，所以我更不敢替你選。」",qi:10,rel:1},
+inner_debt:{reply:"「所以收人東西前想清楚。」\n\n顧長青拍了拍你肩膀。\n\n「免費的丹藥、免費的指點、免費的人情，最後都有人來結帳。」",rel:1}
+};
+
+function npcName(id){var map={lin:"林清霜",han:"韓執事",old:"守閣老人",dan:"丹辰子",tie:"鐵山",merchant:"蘇九娘",zhao:"趙無鋒",sword:"白衣劍客",inner:"顧長青",qiao:"喬遠山",mu:"木小禾",yu:"余晚舟",mo:"莫掌櫃",ning:"寧紅袖",sha:"沙行客",hai:"海七",lei:"雷千岳",xue:"雪無痕",ghost:"殘魂道人"};return map[id]||"陌生修士";}
+function nextNpcText(id){if(!s.talkCount)s.talkCount={};var arr=NOVEL_DIALOGUE[id]?NOVEL_DIALOGUE[id].lines:(NPC_SHORT[id]||["對方只是朝你點了點頭。"]);var n=s.talkCount[id]||0;s.talkCount[id]=n+1;return arr[n%arr.length];}
+function maybeFate(id){if(!NOVEL_DIALOGUE[id]||!NOVEL_DIALOGUE[id].fate)return "";if(!s.fateSeen)s.fateSeen={};if(s.fateSeen[id])return "";var n=s.talkCount[id]||0,rel=s.relations[id]||0;if(n<3||rel<1)return "";var chance=Math.min(.55,.18+rel*.08+s.luck*.015);if(Math.random()>chance)return "";s.fateSeen[id]=true;if(id==="lin"||id==="zhao"||id==="sword"||id==="inner")s.qi+=20;if(id==="dan")s.inv.回春丹=(s.inv.回春丹||0)+1;if(id==="tie")s.inv.洗鍊石=(s.inv.洗鍊石||0)+1;if(id==="merchant")s.stones+=66;if(id==="han")s.flags.secret=true;hist("【人物機緣】"+NOVEL_DIALOGUE[id].fate.replace(/\n/g," "));return "\n\n──── 人物機緣 ────\n"+NOVEL_DIALOGUE[id].fate;}
+function storyOptions(id){var d=NOVEL_DIALOGUE[id],out="";if(d){for(var i=0;i<d.choices.length;i++){var c=d.choices[i];out+=B(c[0],"storyChoice('"+id+"','"+c[2]+"')");}}else{out+=B("再聽他說說","talk('"+id+"')");}return out;}
+
 function people(){var arr=NPCS[s.loc]||[],out="";if(!arr.length)out='<div class="story">此地暫無重要人物。四處走走，也許會遇見新的因果。</div>';for(var i=0;i<arr.length;i++){var n=arr[i];out+='<div class="item"><b>'+n.name+'</b> <span class="tag">'+n.title+'</span><br><small>'+n.desc+'</small><br><small>好感：'+(s.relations[n.id]||0)+'</small>'+B("交談","talk(\''+n.id+'\')")+'</div>'}return '<div class="panel"><div class="title">附近人物</div>'+out+'</div>'}
-window.talk=function(id){var name={lin:"林清霜",han:"韓執事",old:"守閣老人",dan:"丹辰子",tie:"鐵山",merchant:"蘇九娘",zhao:"趙無鋒",sword:"白衣劍客",inner:"顧長青",qiao:"喬遠山",mu:"木小禾",yu:"余晚舟",mo:"莫掌櫃",ning:"寧紅袖",sha:"沙行客",hai:"海七",lei:"雷千岳",xue:"雪無痕",ghost:"殘魂道人"}[id]||"陌生人";var body="",opts="";
-if(id==="lin"){body="她收劍入鞘，淡淡看你一眼。\n「修仙不是坐著等境界自己長出來。」";opts=B("請教師姐劍術","choiceTalk('lin','learn')")+B("聊聊最近的宗門傳聞","choiceTalk('lin','rumor')")+B("送上一株靈草","choiceTalk('lin','gift')","good")}
-if(id==="han"){body="韓執事笑得很和氣。\n「宗門不養閒人。想要功法、丹藥、靈石，就得有貢獻。」";opts=B("詢問高報酬任務","choiceTalk('han','job')")+B("套問後山秘境消息","choiceTalk('han','secret')")}
-if(id==="old"){body="老人沒有抬頭，只翻了翻手中的破舊竹簡。\n「功法沒有強弱，只有人能不能活到把它練成。」";opts=B("詢問五靈根","choiceTalk('old','five')")+B("請教高階功法","choiceTalk('old','tech')")}
-if(id==="dan"){body="丹辰子拍了拍黑掉一半的丹爐。\n「炸爐不可怕，沒材料才可怕。」";opts=B("請教築基丹","choiceTalk('dan','pill')")+B("談論丹道","choiceTalk('dan','dao')")}
-if(id==="tie"){body="鐵山頭也不抬。\n「好材料只是開始。真正的器，是人把命錘進去。」";opts=B("請教煉器詞條","choiceTalk('tie','affix')")+B("詢問神兵","choiceTalk('tie','divine')")}
-if(id==="merchant"){body="蘇九娘笑吟吟地推來一杯靈茶。\n「消息也有價。你想買東西，還是買別人的秘密？」";opts=B("買低階材料包","choiceTalk('merchant','buy')")+B("打聽古域傳聞","choiceTalk('merchant','rumor')")}
-if(id==="zhao"){body="趙無鋒捏了捏拳頭。\n「別只會閉關。來，打一場。」";opts=B("接受切磋","battle(1)","danger")+B("先聊兩句","choiceTalk('zhao','chat')")}
-if(id==="sword"){body="白衣劍客背對著你，谷風吹動衣袂。\n「劍不是兵器，是你願不願意斬掉退路。」";opts=B("觀摩他的劍意","choiceTalk('sword','observe')")+B("問他姓名","choiceTalk('sword','name')")}
-if(id==="inner"){body="顧長青負手而立。\n「築基只是開始。外門時爭資源，內門開始爭大道。」";opts=B("請教內門修行","choiceTalk('inner','guide')")+B("詢問主峰","choiceTalk('inner','peak')")}
-if(id==="qiao"){body="喬遠山掃了你一眼。\n「任務有三種：賺靈石的、賺貢獻的，還有拿命換機緣的。」";opts=B("接普通委託","mission()")+B("詢問高危委託","choiceTalk('qiao','risk')")}
-if(id==="mu"){body="木小禾蹲在藥圃邊，小心撥開靈草葉片。\n「靈藥跟人一樣，急著催只會傷根。」";opts=B("請教靈植","choiceTalk('mu','herb')")+B("幫忙照料藥田","choiceTalk('mu','work')")}
-if(id==="yu"){body="余晚舟盯著平靜湖面。\n「魚不上鉤時，才最適合想事情。」";opts=B("詢問湖底傳聞","choiceTalk('yu','lake')")+B("陪他坐一會","choiceTalk('yu','sit')")}
-if(id==="mo"){body="莫掌櫃撥了撥算盤。\n「寶物沒有貴不貴，只看你需不需要。」";opts=B("看看材料","market()")+B("詢問稀有裝備","choiceTalk('mo','gear')")}
-if(id==="ning"){body="寧紅袖壓低聲音。\n「你想知道的事，通常都有人不想讓你知道。」";opts=B("打聽古宗葬地","choiceTalk('ning','grave')")+B("打聽海外","choiceTalk('ning','sea')")}
-if(id==="sha"){body="沙行客擦去刀鞘上的沙。\n「赤砂荒漠會埋人，也會吐寶。」";opts=B("詢問荒漠遺跡","choiceTalk('sha','ruin')")+B("交換獵妖心得","choiceTalk('sha','hunt')")}
-if(id==="hai"){body="海七咧嘴一笑。\n「青州只是陸上的一角。出了海，才知道世界多大。」";opts=B("詢問靈潮島","choiceTalk('hai','island')")+B("詢問海外宗門","choiceTalk('hai','sect')")}
-if(id==="lei"){body="雷千岳掌心雷弧炸響。\n「怕雷的人練不了雷法。」";opts=B("請教雷法","choiceTalk('lei','teach')")+B("觀摩引雷","choiceTalk('lei','watch')")}
-if(id==="xue"){body="雪無痕睜開眼，寒氣在睫毛上凝成霜。\n「心亂，冰就不純。」";opts=B("請教冰術","choiceTalk('xue','teach')")+B("詢問玄冰洞深處","choiceTalk('xue','deep')")}
-if(id==="ghost"){body="殘魂道人望著早已不存在的山門。\n「宗門會滅，道統未必。」";opts=B("詢問古宗傳承","choiceTalk('ghost','legacy')")+B("詢問覆滅原因","choiceTalk('ghost','fall')")}
-document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+name+'</div><div class="story">'+body+'</div>'+opts+B("結束交談","closeModal()")+'</div></div>'}
-window.choiceTalk=function(id,c){s.relations[id]=(s.relations[id]||0)+1;
-if(id==="lin"&&c==="learn"){if(s.relations.lin>=3&&s.knownTechs.indexOf("寒泉劍訣")<0){s.knownTechs.push("寒泉劍訣");toast("林清霜傳你《寒泉劍訣》")}else toast("她指出你劍招中的三處破綻")}
-if(id==="lin"&&c==="gift"){if(s.inv.靈草>0){s.inv.靈草--;s.relations.lin+=2;toast("好感提升")}else toast("你沒有靈草")}
-if(id==="han"&&c==="job"){s.contrib+=6;s.stones+=20;hist("韓執事給了你一件急務。");toast("貢獻 +6")}
-if(id==="han"&&c==="secret"){s.flags.secret=true;toast("得知秘境入口線索")}
-if(id==="old"&&c==="five"&&s.flags.five&&s.knownTechs.indexOf("殘缺五行訣")<0){s.knownTechs.push("殘缺五行訣");toast("獲得《殘缺五行訣》")}
-if(id==="old"&&c==="tech"){toast("老人：先把手上的路走穩。")}
-if(id==="dan"&&c==="pill"){if(s.contrib>=15){s.contrib-=15;s.recipes.築基丹=true;toast("習得築基丹方")}else toast("需要 15 宗門貢獻")}
-if(id==="tie"&&c==="affix"){s.inv.洗鍊石++;toast("鐵山丟給你一顆洗鍊石")}
-if(id==="tie"&&c==="divine"){toast("神兵？先學會把凡鐵錘好。")}
-if(id==="merchant"&&c==="buy"){market()}
-if(id==="merchant"&&c==="rumor"){s.flags.secret=true;toast("斷碑古域最近有人見到古修洞府")}
-if(id==="sword"&&c==="observe"){if(s.relations.sword>=3&&s.knownTechs.indexOf("太虛劍典・殘頁")<0){s.knownTechs.push("太虛劍典・殘頁");toast("你記下了一縷太虛劍意")}else toast("劍意太深，你只看懂一絲")}
-if(id==="inner"&&c==="guide"){s.qi+=25;toast("修為 +25")}
-if(id==="qiao"&&c==="risk"){s.contrib+=4;hist("記下了一件高危委託。");toast("獲得高危任務線索")}
-if(id==="mu"&&c==="herb"){s.inv.靈草+=1;toast("獲得靈草 ×1")}
-if(id==="mu"&&c==="work"){s.contrib+=3;toast("宗門貢獻 +3")}
-if(id==="yu"&&c==="lake"){s.luck+=1;toast("氣運 +1")}
-if(id==="yu"&&c==="sit"){s.qi+=8;toast("心境平復，修為 +8")}
-if(id==="mo"&&c==="gear"){toast("莫掌櫃：真正好貨要等拍賣會。")}
-if(id==="ning"&&c==="grave"){s.flags.secret=true;toast("獲得古宗葬地情報")}
-if(id==="ning"&&c==="sea"){toast("得知雲海港與靈潮島航線")}
-if(id==="sha"&&c==="hunt"){s.inv.獸骨+=1;toast("獸骨 +1")}
-if(id==="lei"&&c==="teach"&&s.knownTechs.indexOf("紫霄雷法")<0){if(s.contrib>=70){s.contrib-=70;s.knownTechs.push("紫霄雷法");toast("習得《紫霄雷法》")}else toast("需要 70 宗門貢獻")}
-if(id==="xue"&&c==="teach"&&s.knownTechs.indexOf("玄冰封脈術")<0){if(s.contrib>=65){s.contrib-=65;s.knownTechs.push("玄冰封脈術");toast("習得《玄冰封脈術》")}else toast("需要 65 宗門貢獻")}
-if(id==="ghost"&&c==="legacy"&&s.knownTechs.indexOf("無相遁法")<0){if(s.relations.ghost>=3){s.knownTechs.push("無相遁法");toast("獲得《無相遁法》殘篇")}else toast("殘魂道人尚未完全信任你")}
-hist("與 "+id+" 交談。");save();talk(id)}
+window.talk=function(id){var name=npcName(id);var body=nextNpcText(id);s.relations[id]=(s.relations[id]||0)+1;body+=maybeFate(id);save();document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+name+'</div><div class="story">'+body+'</div>'+storyOptions(id)+B("先告辭","closeModal()")+'</div></div>';};
+window.storyChoice=function(id,key){var e=STORY_CHOICE[key];if(!e){toast("這段對話尚未開放");return}s.relations[id]=(s.relations[id]||0)+(e.rel||1);if(e.qi)s.qi+=e.qi;if(e.contrib)s.contrib+=e.contrib;if(e.stones)s.stones+=e.stones;if(e.luck)s.luck+=e.luck;if(e.flag)s.storyFlags[e.flag]=true;if(e.item)s.inv[e.item]=(s.inv[e.item]||0)+(e.count||1);hist("與"+npcName(id)+"的一次交談改變了某些事情。");save();document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="npc">'+npcName(id)+'</div><div class="story">'+e.reply+'</div>'+B("繼續聊","talk('"+id+"')","blue")+B("記下這件事，告辭","closeModal()")+'</div></div>';};
 window.closeModal=function(){document.getElementById("modal").innerHTML="";render()}
 window.mission=function(){var r=Math.random();if(r<.33){s.contrib+=10;s.stones+=35;hist("護送靈藥車隊，獲貢獻10。");toast("任務完成")}else if(r<.66){s.contrib+=8;s.inv.靈草+=3;hist("整理靈田，獲貢獻8。");toast("獲得靈草")}else{hist("接下萬獸林獵妖任務。");toast("去萬獸林斬妖")};render()}
 window.showTechs=function(){var out="";for(var k in TECHS){var t=TECHS[k],known=s.knownTechs.indexOf(k)>=0;out+='<div class="item"><b class="r'+Math.min(5,t.tier)+'">'+k+'</b> <span class="tag">'+t.type+'</span><br><small>'+t.desc+'</small><span class="aff">'+t.bonus+'</span>'+(known?'<div class="tag">已習得</div>':(t.cost>0?B("用貢獻換取（"+t.cost+"）","learnTech(\''+k+'\')"):'<div class="tag">特殊機緣</div>'))+'</div>'}document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="title">藏經閣・功法目錄</div>'+out+B("離開","closeModal()")+'</div></div>'}
 window.learnTech=function(name){var t=TECHS[name];if(!t||s.knownTechs.indexOf(name)>=0)return;if(s.contrib<t.cost){toast("貢獻不足");return}s.contrib-=t.cost;s.knownTechs.push(name);hist("習得《"+name+"》。");toast("習得 "+name);showTechs()}
-function cultivate(){var opts="";for(var i=0;i<s.knownTechs.length;i++){var x=s.knownTechs[i];if(TECHS[x]&&TECHS[x].type==="心法")opts+=B((s.tech===x?"✓ ":"")+"運轉《"+x+"》","setTech(\''+x+'\')")}return '<div class="panel"><div class="title">洞府修行</div><div class="story">當前心法：<b>'+s.tech+'</b>\n生命 '+s.hp+'/'+s.maxhp+'　靈力 '+s.mp+'/'+s.maxmp+'\n\n閉關會推進歲月。境界越高，突破越艱難。</div><div class="bar hp"><i style="width:'+(s.hp/s.maxhp*100)+'%"></i></div><div class="bar mp"><i style="width:'+(s.mp/s.maxmp*100)+'%"></i></div>'+B("閉關一月","meditate()")+B("嘗試突破","breakthrough()","good")+'</div><div class="panel"><div class="title">已習得心法</div>'+opts+'</div>'}
+
+function returnEvent(){var r=Math.random();if(r<.15){s.stones+=28;return "歸途中，你替一支被山匪纏上的凡人商隊解了圍。商隊掌櫃堅持塞給你二十八枚靈石。";}if(r<.28){s.qi+=12;return "山腰忽起雲海，你在崖邊停了一刻鐘。某個一直想不通的行氣節點，竟在那一刻自行通順。";}if(r<.39){s.inv.靈草=(s.inv.靈草||0)+1;return "路過一片背陰山坡時，你聞到淡淡藥香，找到一株尚未被採走的靈草。";}if(r<.47){s.hp=Math.max(1,s.hp-8);return "你抄近路時驚動了一窩赤尾蜂。雖然脫身不難，手背還是腫了半天。";}return "";}
+window.returnSect=function(){var from=(SCENES[s.loc]&&SCENES[s.loc].name)||"外地";var ev=returnEvent();s.loc="cave";hist("從「"+from+"」踏上歸途，返回青玄宗弟子洞府。"+(ev?(" "+ev):""));save();render();toast(ev?"歸宗途中發生了一件事":"已回到青玄宗洞府");};
+window.restAtSect=function(){var ts=totalStats();s.hp=ts.hp;s.mp=ts.mp;var roll=Math.random(),extra="";if(roll<.18){s.qi+=8;extra="夜裡醒來時，你忽然想通白日戰鬥中的一處失誤，修為略有精進。";}else if(roll<.30){s.inv.回春丹=(s.inv.回春丹||0)+1;extra="丹峰弟子送錯了一瓶丹藥，發現時已懶得拿回去，便留給了你。";}hist("在宗門洞府休養三日。氣血與靈力盡復。"+extra);save();render();toast("休養完成・狀態全滿");};
+window.shortRetreat=function(){var root=s.root==="天靈根"?1.65:s.root==="異靈根"?1.4:s.root==="雙靈根"?1.22:s.root==="五靈根"?.82:1;var base=30+Math.floor(Math.random()*23),gain=Math.floor(base*root);var note="";var r=Math.random();if(r<.12){gain+=18;note="閉關第四日，聚靈陣中的靈氣忽然形成一個小旋渦，你順勢多運轉了三個周天。";}else if(r<.21){gain=Math.max(10,gain-10);note="這七日心緒不寧，幾次入定都被雜念打斷。你沒有強行修煉。";}else{note="七日裡沒有異象，也沒有頓悟。你只是把每一次吐納都做得比前一次更穩。";}s.qi+=gain;s.passXP+=4;s.mp=s.maxmp;hist("在宗門洞府閉關七日，修為 +"+gain+"。"+note);save();render();toast("七日閉關・修為 +"+gain);};
+window.homeJournal=function(){var recent=s.history.slice(0,6).join("<br>")||"洞府石桌上還沒有留下值得記錄的事情。";document.getElementById("modal").innerHTML='<div class="overlay"><div class="card"><div class="title">洞府札記</div><div class="story">回到自己的地方後，外面的事才終於有時間慢慢想。<br><br>'+recent+'</div>'+B("收起札記","closeModal()")+'</div></div>';};
+
+function cultivate(){var opts="";var atSect=["gate","outer","cave","mission","library","dan","forge","field","arena","inner","peak","starTerrace","thunderPeak"].indexOf(s.loc)>=0;var homeBox=atSect?'<div class="panel"><div class="title">宗門生活</div><div class="story">身在青玄宗，至少今晚不用擔心半夜有妖獸撞開門。真正適合長時間休養與閉關的地方，是自己的洞府。</div>'+B("回洞府休養三日","restAtSect()","good")+B("閉關七日","shortRetreat()","blue")+'</div>':'<div class="panel"><div class="title">人在外地</div><div class="story">野外可以打坐恢復，但真正閉關最好先回宗門。修士最忌在最脆弱的入定時，把命交給一片陌生山林。</div>'+B("啟程回青玄宗","returnSect()","good")+'</div>';for(var i=0;i<s.knownTechs.length;i++){var x=s.knownTechs[i];if(TECHS[x]&&TECHS[x].type==="心法")opts+=B((s.tech===x?"✓ ":"")+"運轉《"+x+"》","setTech(\''+x+'\')")}return homeBox+'<div class="panel"><div class="title">洞府修行</div><div class="story">當前心法：<b>'+s.tech+'</b>\n生命 '+s.hp+'/'+s.maxhp+'　靈力 '+s.mp+'/'+s.maxmp+'\n\n閉關會推進歲月。境界越高，突破越艱難。</div><div class="bar hp"><i style="width:'+(s.hp/s.maxhp*100)+'%"></i></div><div class="bar mp"><i style="width:'+(s.mp/s.maxmp*100)+'%"></i></div>'+B("閉關一月","meditate()")+B("嘗試突破","breakthrough()","good")+'</div><div class="panel"><div class="title">已習得心法</div>'+opts+'</div>'}
 window.setTech=function(x){s.tech=x;render();toast("切換心法")}
 window.meditate=function(){var root=s.root==="天靈根"?1.7:s.root==="異靈根"?1.45:s.root==="雙靈根"?1.25:s.root==="五靈根"?.78:1;var tech=s.tech==="青玄引氣篇"?1.25:s.tech==="殘缺五行訣"?1.08:1;var g=Math.floor((18+Math.random()*15)*root*tech);s.qi+=g;s.passXP+=4;s.age+=Math.random()<.16?1:0;s.mp=s.maxmp;hist("閉關吐納，修為 +"+g+"。");render();toast("修為 +"+g)}
 window.breakthrough=function(){if(s.qi<need()){toast("修為尚未圓滿");return}var ch=.9-s.realm*.035;if(s.realm===1&&s.layer===4&&s.inv.築基丹>0){s.inv.築基丹--;ch+=.12}if(Math.random()>ch){s.qi=Math.floor(s.qi*.35);s.hp=Math.max(20,s.hp-25);hist("突破失敗，經脈受創。");render();toast("突破失敗");return}s.qi-=need();if(s.layer<4)s.layer++;else if(s.realm<9){s.realm++;s.layer=1;s.maxhp+=35;s.hp=s.maxhp;s.maxmp+=20;s.mp=s.maxmp;s.lifespan+=55+s.realm*25;s.atk+=10*s.realm;s.def+=6*s.realm;if(s.realm>=2)s.flags.inner=true;if(s.realm===2&&s.flags.five&&s.tech==="殘缺五行訣"){hist("五氣匯海，凝成「五行道基」！");s.luck+=6}}s.passXP+=20;hist("破境成功，踏入 "+rn()+"。");render();toast("破境成功！")}
@@ -290,7 +403,7 @@ function runAction(code){
   if((m=code.match(/^goPage\((['"])(.*?)\1\)$/))) return window.goPage(m[2]);
   if((m=code.match(/^start\((-?\d+)\)$/))) return window.start(Number(m[1]));
   if((m=code.match(/^talk\((['"])(.*?)\1\)$/))) return window.talk(m[2]);
-  if((m=code.match(/^choiceTalk\((['"])(.*?)\1,(['"])(.*?)\3\)$/))) return window.choiceTalk(m[2],m[4]);
+  if((m=code.match(/^storyChoice\((['"])(.*?)\1,(['"])(.*?)\3\)$/))) return window.storyChoice(m[2],m[4]);
   if((m=code.match(/^learnTech\((['"])(.*?)\1\)$/))) return window.learnTech(m[2]);
   if((m=code.match(/^setTech\((['"])(.*?)\1\)$/))) return window.setTech(m[2]);
   if((m=code.match(/^battle\((\d+)\)$/))) return window.battle(Number(m[1]));
@@ -301,7 +414,7 @@ function runAction(code){
   var simple={
     "explore()":window.explore,"mission()":window.mission,"showTechs()":window.showTechs,
     "market()":window.market,"meditate()":window.meditate,"breakthrough()":window.breakthrough,
-    "rerollWeapon()":window.rerollWeapon,"monthly()":window.monthly,"closeModal()":window.closeModal
+    "rerollWeapon()":window.rerollWeapon,"monthly()":window.monthly,"closeModal()":window.closeModal,"returnSect()":window.returnSect,"restAtSect()":window.restAtSect,"shortRetreat()":window.shortRetreat,"homeJournal()":window.homeJournal
   };
   if(simple[code]) return simple[code]();
   toast("按鈕指令錯誤");
